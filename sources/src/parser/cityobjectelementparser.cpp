@@ -325,7 +325,8 @@ namespace citygml {
             parseGeometryForLODLevel(std::stoi(m_model->getAttribute("dem:lod")));
         } else if (node == NodeType::GEN_Lod0TerrainIntersectionNode
                    || node == NodeType::WTR_Lod0MultiCurveNode
-                   || node == NodeType::WTR_Lod0MultiSurfaceNode) {
+                   || node == NodeType::WTR_Lod0MultiSurfaceNode
+                   || node == NodeType::BLDG_Lod0RoofEdgeNode) {
             
             parseGeometryForLODLevel(0);
         } else if (node == NodeType::BLDG_Lod1MultiCurveNode
@@ -399,8 +400,7 @@ namespace citygml {
                    || node == NodeType::BLDG_Lod4GeometryNode
                    || node == NodeType::VEG_Lod4GeometryNode) {
             parseGeometryPropertyElementForLODLevel(4, attributes.getCityGMLIDAttribute());
-        } else if (node == NodeType::GEN_Lod0ImplicitRepresentationNode
-                   || node == NodeType::BLDG_Lod0RoofEdgeNode) {
+        } else if (node == NodeType::GEN_Lod0ImplicitRepresentationNode) {
           
             parseImplicitGeometryForLODLevel(0);
         } else if (node == NodeType::VEG_Lod1ImplicitRepresentationNode
