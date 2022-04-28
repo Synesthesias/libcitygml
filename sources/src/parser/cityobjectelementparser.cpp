@@ -321,12 +321,14 @@ namespace citygml {
                    || node == NodeType::DEM_ReliefPointsNode
                    || node == NodeType::DEM_RidgeOrValleyLinesNode
                    || node == NodeType::DEM_BreaklinesNode) {
-            
+
             parseGeometryForLODLevel(std::stoi(m_model->getAttribute("dem:lod")));
+        }else if(node == NodeType::BLDG_Lod0RoofEdgeNode){
+
+            parseGeometryForLod0RoofEdgeNode();
         } else if (node == NodeType::GEN_Lod0TerrainIntersectionNode
                    || node == NodeType::WTR_Lod0MultiCurveNode
-                   || node == NodeType::WTR_Lod0MultiSurfaceNode
-                   || node == NodeType::BLDG_Lod0RoofEdgeNode) {
+                   || node == NodeType::WTR_Lod0MultiSurfaceNode) {
             
             parseGeometryForLODLevel(0);
         } else if (node == NodeType::BLDG_Lod1MultiCurveNode
@@ -610,6 +612,12 @@ namespace citygml {
         setParserForNextElement(new GeometryElementParser(m_documentParser, m_factory, m_logger, lod, m_model->getType(), [this](Geometry* geom) {
             m_model->addGeometry(geom);
         }));
+    }
+
+    void CityObjectElementParser::parseGeometryForLod0RoofEdgeNode() {
+        setParserForNextElement(new GeometryElementParser(m_documentParser, m_factory, m_logger, 0, CityObject::CityObjectsType::COT_RoofSurface, [this](Geometry* geom) {
+            m_model->addGeometry(geom);
+            }));
     }
 
     void CityObjectElementParser::parseImplicitGeometryForLODLevel(int lod)
