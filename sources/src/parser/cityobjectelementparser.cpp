@@ -12,10 +12,12 @@
 #include "parser/addressparser.h"
 #include "parser/rectifiedgridcoverageparser.h"
 #include "parser/externalreferenceparser.h"
+#include <parser/citygmldocumentparser.h>
 
 #include <citygml/citygmlfactory.h>
 #include <citygml/citygmllogger.h>
 #include <citygml/address.h>
+#include <citygml/citymodel.h>
 
 #include <stdexcept>
 #include <iostream>
@@ -102,6 +104,7 @@ namespace citygml {
                 typeIDTypeMap.insert(HANDLE_TYPE(DEM, BreaklineRelief));
                 typeIDTypeMap.insert(HANDLE_TYPE(DEM, RasterRelief));
                 typeIDTypeMap.insert(HANDLE_TYPE(BLDG, IntBuildingInstallation));
+                typeIDTypeMap.insert(HANDLE_TYPE(URO, KeyValuePair));
 
                 typeIDTypeMapInitialized = true;
             }
@@ -308,7 +311,8 @@ namespace citygml {
                    || node == NodeType::DEM_BreaklineReliefNode
                    || node == NodeType::DEM_RasterReliefNode
                    || node == NodeType::DEM_GridNode
-                   || node == NodeType::CORE_GeneralizesToNode) {
+                   || node == NodeType::CORE_GeneralizesToNode
+                   || node == NodeType::URO_ExtendedAttributeNode) {
             setParserForNextElement(new CityObjectElementParser(m_documentParser, m_factory, m_logger, [this](CityObject* obj) {
                                         m_model->addChildCityObject(obj);
                                     }));
@@ -446,6 +450,10 @@ namespace citygml {
                 m_model->setAddress(std::move(address));
             }));
             return true;
+        } else if(node == NodeType::URO_KeyNode) {
+            m_model->setAttribute("codeSpace", attributes.getAttribute("codeSpace"));
+        } else if (node == NodeType::URO_CodeValueNode ) {
+            m_model->setAttribute("codeSpace", attributes.getAttribute("codeSpace"));
         } else {
             return GMLFeatureCollectionElementParser::parseChildElementStartTag(node, attributes);
         }
@@ -597,7 +605,44 @@ namespace citygml {
                     || node == NodeType::WTR_BoundedByNode
                     || node == NodeType::BLDG_AddressNode
                     || node == NodeType::CORE_AddressNode
-                    || node == NodeType::CORE_XalAddressNode) {
+                    || node == NodeType::CORE_XalAddressNode
+                    || node == NodeType::URO_ExtendedAttributeNode ) {
+
+            return true;
+        } else if (node == NodeType::URO_KeyNode) {
+            CITYGML_LOG_INFO(m_logger, "URO_KeyNode : code = " << characters);
+            CITYGML_LOG_INFO(m_logger, "URO_KeyNode : codeSpace = " << m_model->getAttribute("codeSpace"));
+
+            auto code_space = m_model->getAttribute("codeSpace");
+            auto code = characters;
+
+            auto city_model = m_documentParser.getModel();
+            auto temp = city_model->getNumRootCityObjects(); //‚±‚ê‚à—Ž‚¿‚é
+            //auto code_lists = city_model->getCodeLists(); //‚È‚º‚©‚±‚±‚Å—Ž‚¿‚é
+            /*
+            if (code_lists.find(code_space) == code_lists.end()) {
+                //“o˜^‚È‚µ
+                CITYGML_LOG_INFO(m_logger, "Let's parse!" );
+                //ŽŽ‚µ‚É“o˜^
+
+            } else {
+                //“o˜^‚ ‚è
+                auto code_list = code_lists[code_space];
+                auto attribute_key = code_list[stoi(code)];
+                CITYGML_LOG_INFO(m_logger, "attribute_key = " << attribute_key);
+            }
+            */
+
+
+
+            return true;
+        } else if (node == NodeType::URO_CodeValueNode) {
+            CITYGML_LOG_INFO(m_logger, "URO_CodeValueNode : code = " << characters);
+            CITYGML_LOG_INFO(m_logger, "URO_CodeValueNode : codeSpace = " << m_model->getAttribute("codeSpace"));
+
+
+
+
 
             return true;
         }

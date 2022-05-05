@@ -138,4 +138,9 @@ namespace citygml
         return out;
     }
 
+    const CodeLists& CityModel::getCodeLists() const  
+    {
+        return m_CodeLists;
+    }
+
 }
