@@ -451,9 +451,9 @@ namespace citygml {
             }));
             return true;
         } else if(node == NodeType::URO_KeyNode) {
-            m_model->setAttribute("codeSpace", attributes.getAttribute("codeSpace"));
+            m_model->setAttribute("Key_codeSpace", attributes.getAttribute("codeSpace"));
         } else if (node == NodeType::URO_CodeValueNode ) {
-            m_model->setAttribute("codeSpace", attributes.getAttribute("codeSpace"));
+            m_model->setAttribute("CodeValue_codeSpace", attributes.getAttribute("codeSpace"));
         } else {
             return GMLFeatureCollectionElementParser::parseChildElementStartTag(node, attributes);
         }
@@ -610,39 +610,21 @@ namespace citygml {
 
             return true;
         } else if (node == NodeType::URO_KeyNode) {
-            CITYGML_LOG_INFO(m_logger, "URO_KeyNode : code = " << characters);
-            CITYGML_LOG_INFO(m_logger, "URO_KeyNode : codeSpace = " << m_model->getAttribute("codeSpace"));
+            auto codeSpace = m_model->getAttribute("Key_codeSpace");
+            int code = stoi(characters);
 
-            auto code_space = m_model->getAttribute("codeSpace");
-            auto code = characters;
-
-            auto city_model = m_documentParser.getModel();
-            auto temp = city_model->getNumRootCityObjects(); //‚±‚ê‚à—Ž‚¿‚é
-            //auto code_lists = city_model->getCodeLists(); //‚È‚º‚©‚±‚±‚Å—Ž‚¿‚é
-            /*
-            if (code_lists.find(code_space) == code_lists.end()) {
-                //“o˜^‚È‚µ
-                CITYGML_LOG_INFO(m_logger, "Let's parse!" );
-                //ŽŽ‚µ‚É“o˜^
-
-            } else {
-                //“o˜^‚ ‚è
-                auto code_list = code_lists[code_space];
-                auto attribute_key = code_list[stoi(code)];
-                CITYGML_LOG_INFO(m_logger, "attribute_key = " << attribute_key);
-            }
-            */
-
-
+            auto attributeKey = m_factory.getCodeValue(codeSpace, code);
+            m_model->setAttribute("attributeKey", attributeKey);
 
             return true;
         } else if (node == NodeType::URO_CodeValueNode) {
-            CITYGML_LOG_INFO(m_logger, "URO_CodeValueNode : code = " << characters);
-            CITYGML_LOG_INFO(m_logger, "URO_CodeValueNode : codeSpace = " << m_model->getAttribute("codeSpace"));
+            auto codeSpace = m_model->getAttribute("CodeValue_codeSpace");
+            int code = stoi(characters);
 
-
-
-
+            auto attributeValue = m_factory.getCodeValue(codeSpace, code);
+            auto attributeKey = m_model->getAttribute("attributeKey");
+            m_model->setAttribute(attributeKey, attributeValue);
+            std::cout << "m_model->setAttribute( " << attributeKey << ", " << attributeValue << " )" << std::endl;// for debug
 
             return true;
         }

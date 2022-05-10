@@ -25,6 +25,7 @@ namespace citygml {
         m_polygonManager = std::unique_ptr<PolygonManager>(new PolygonManager(logger));
         m_geometryManager = std::unique_ptr<GeometryManager>(new GeometryManager(logger));
         m_logger = logger;
+        m_codeLists = std::shared_ptr<CodeLists>(new CodeLists);
     }
 
     RectifiedGridCoverage* CityGMLFactory::createRectifiedGridCoverage(std::string const& id) {
@@ -185,5 +186,24 @@ namespace citygml {
     void CityGMLFactory::appearanceTargetCreated(AppearanceTarget* obj)
     {
         m_appearanceManager->addAppearanceTarget(obj);
+    }
+
+    const std::string CityGMLFactory::getCodeValue(const std::string codeSpace, int id)
+    {
+        if (m_codeLists->find(codeSpace) == m_codeLists->end()) {
+            CITYGML_LOG_INFO(m_logger, "parsing " << codeSpace);
+
+            CodeListHandlerXerces handler;
+            CodeList code_list =handler.getCodeList(codeSpace);
+            m_codeLists->emplace(codeSpace, code_list);
+        }
+        
+        std::string codeValue = "None";
+        if (m_codeLists->find(codeSpace) != m_codeLists->end()) {
+            CodeList code_list = m_codeLists->find(codeSpace)->second;
+            if (code_list.find(id) != code_list.end()) codeValue = code_list.find(id)->second;
+        }
+
+        return codeValue;
     }
 }

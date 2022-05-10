@@ -20,9 +20,6 @@ namespace citygml {
     typedef std::vector<const CityObject*> ConstCityObjects;
     typedef std::map< CityObject::CityObjectsType, std::vector<const CityObject*> > CityObjectsMap;
 
-    typedef std::map<int, std::string> CodeList;
-    typedef std::map<std::string, CodeList> CodeLists;
-
     class LIBCITYGML_EXPORT CityModel : public FeatureObject
     {
         friend class CityGMLFactory;
@@ -47,8 +44,6 @@ namespace citygml {
         std::vector<std::string> themes() const;
         void setThemes(std::vector<std::string> themes);
 
-        const CodeLists& getCodeLists() const;
-
         ~CityModel();
 
     protected:
@@ -64,8 +59,6 @@ namespace citygml {
         std::string m_srsName;
 
         std::vector<std::string> m_themes;
-
-        CodeLists m_CodeLists;
     };
 
     LIBCITYGML_EXPORT std::ostream& operator<<( std::ostream&, const citygml::CityModel & );
