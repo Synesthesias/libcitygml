@@ -16,6 +16,7 @@
 #include <citygml/implictgeometry.h>
 #include <citygml/citygmllogger.h>
 #include <citygml/rectifiedgridcoverage.h>
+#include <filesystem>
 
 namespace citygml {
 
@@ -191,10 +192,14 @@ namespace citygml {
     const std::string CityGMLFactory::getCodeValue(const std::string codeSpace, int id)
     {
         if (m_codeLists->find(codeSpace) == m_codeLists->end()) {
+            if (!std::filesystem::exists(codeSpace)) {
+                CITYGML_LOG_ERROR(m_logger, "Can not find codelist file " << codeSpace);
+                throw std::runtime_error("Unexpected Error occured while parsing xml file.");
+            }
             CITYGML_LOG_INFO(m_logger, "parsing " << codeSpace);
 
             CodeListHandlerXerces handler;
-            CodeList code_list =handler.getCodeList(codeSpace);
+            CodeList code_list = handler.getCodeList(codeSpace);
             m_codeLists->emplace(codeSpace, code_list);
         }
         
