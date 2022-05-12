@@ -194,7 +194,7 @@ namespace citygml {
         if (m_codeLists->find(codeSpace) == m_codeLists->end()) {
             if (!std::filesystem::exists(codeSpace)) {
                 CITYGML_LOG_ERROR(m_logger, "Can not find codelist file " << codeSpace);
-                throw std::runtime_error("Unexpected Error occured while parsing xml file.");
+                throw std::runtime_error("Unexpected Error occurred while parsing xml file.");
             }
             CITYGML_LOG_INFO(m_logger, "parsing " << codeSpace);
 
