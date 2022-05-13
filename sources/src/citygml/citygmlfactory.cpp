@@ -189,23 +189,25 @@ namespace citygml {
         m_appearanceManager->addAppearanceTarget(obj);
     }
 
-    const std::string CityGMLFactory::getCodeValue(const std::string codeSpace, int id)
+    const std::string CityGMLFactory::getCodeValue(const std::string codeSpace, int id, const std::string gmlpath)
     {
-        if (m_codeLists->find(codeSpace) == m_codeLists->end()) {
-            if (!std::filesystem::exists(codeSpace)) {
-                CITYGML_LOG_ERROR(m_logger, "Can not find codelist file " << codeSpace);
+        const std::string codeSpacePath = std::filesystem::absolute(gmlpath + "/../" + codeSpace).string();
+
+        if (m_codeLists->find(codeSpacePath) == m_codeLists->end()) {
+            if (!std::filesystem::exists(codeSpacePath)) {
+                CITYGML_LOG_ERROR(m_logger, "Can not find codelist file " << codeSpacePath);
                 throw std::runtime_error("Unexpected Error occurred while parsing xml file.");
             }
-            CITYGML_LOG_INFO(m_logger, "parsing " << codeSpace);
+            CITYGML_LOG_INFO(m_logger, "parsing " << codeSpacePath);
 
             CodeListHandlerXerces handler;
-            CodeList code_list = handler.getCodeList(codeSpace);
-            m_codeLists->emplace(codeSpace, code_list);
+            CodeList code_list = handler.getCodeList(codeSpacePath);
+            m_codeLists->emplace(codeSpacePath, code_list);
         }
         
         std::string codeValue = "None";
-        if (m_codeLists->find(codeSpace) != m_codeLists->end()) {
-            CodeList code_list = m_codeLists->find(codeSpace)->second;
+        if (m_codeLists->find(codeSpacePath) != m_codeLists->end()) {
+            CodeList code_list = m_codeLists->find(codeSpacePath)->second;
             if (code_list.find(id) != code_list.end()) codeValue = code_list.find(id)->second;
         }
 

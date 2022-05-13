@@ -613,7 +613,7 @@ namespace citygml {
             auto codeSpace = m_model->getAttribute("Key_codeSpace");
             int code = stoi(characters);
 
-            auto attributeKey = m_factory.getCodeValue(codeSpace, code);
+            auto attributeKey = m_factory.getCodeValue(codeSpace, code, getDocumentLocation().getDocumentFileName());
             m_model->setAttribute("attributeKey", attributeKey);
 
             return true;
@@ -621,7 +621,7 @@ namespace citygml {
             auto codeSpace = m_model->getAttribute("CodeValue_codeSpace");
             int code = stoi(characters);
 
-            auto attributeValue = m_factory.getCodeValue(codeSpace, code);
+            auto attributeValue = m_factory.getCodeValue(codeSpace, code, getDocumentLocation().getDocumentFileName());
             auto attributeKey = m_model->getAttribute("attributeKey");
             m_model->setAttribute(attributeKey, attributeValue);
             std::cout << "m_model->setAttribute( " << attributeKey << ", " << attributeValue << " )" << std::endl;// for debug
