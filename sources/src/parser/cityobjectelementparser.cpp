@@ -42,6 +42,9 @@ namespace citygml {
         : GMLFeatureCollectionElementParser(documentParser, factory, logger)
         , m_lastAttributeType(AttributeType::String)
         , m_genericAttributeSet(nullptr)
+        , _key_codeSpace("")
+        , _codeValue_codeSpace("")
+        , _attributeKey("")
     {
         m_callback = callback;
     }
@@ -104,7 +107,6 @@ namespace citygml {
                 typeIDTypeMap.insert(HANDLE_TYPE(DEM, BreaklineRelief));
                 typeIDTypeMap.insert(HANDLE_TYPE(DEM, RasterRelief));
                 typeIDTypeMap.insert(HANDLE_TYPE(BLDG, IntBuildingInstallation));
-                typeIDTypeMap.insert(HANDLE_TYPE(URO, KeyValuePair));
 
                 typeIDTypeMapInitialized = true;
             }
@@ -311,8 +313,7 @@ namespace citygml {
                    || node == NodeType::DEM_BreaklineReliefNode
                    || node == NodeType::DEM_RasterReliefNode
                    || node == NodeType::DEM_GridNode
-                   || node == NodeType::CORE_GeneralizesToNode
-                   || node == NodeType::URO_ExtendedAttributeNode) {
+                   || node == NodeType::CORE_GeneralizesToNode) {
             setParserForNextElement(new CityObjectElementParser(m_documentParser, m_factory, m_logger, [this](CityObject* obj) {
                                         m_model->addChildCityObject(obj);
                                     }));
@@ -450,10 +451,12 @@ namespace citygml {
                 m_model->setAddress(std::move(address));
             }));
             return true;
-        } else if(node == NodeType::URO_KeyNode) {
-            m_model->setAttribute("Key_codeSpace", attributes.getAttribute("codeSpace"));
+        } else if (node == NodeType::URO_ExtendedAttributeNode || node == NodeType::URO_KeyValuePairNode) {
+            return true;
+        } else if (node == NodeType::URO_KeyNode) {
+            _key_codeSpace = attributes.getAttribute("codeSpace");
         } else if (node == NodeType::URO_CodeValueNode ) {
-            m_model->setAttribute("CodeValue_codeSpace", attributes.getAttribute("codeSpace"));
+            _codeValue_codeSpace =  attributes.getAttribute("codeSpace");
         } else {
             return GMLFeatureCollectionElementParser::parseChildElementStartTag(node, attributes);
         }
@@ -606,25 +609,21 @@ namespace citygml {
                     || node == NodeType::BLDG_AddressNode
                     || node == NodeType::CORE_AddressNode
                     || node == NodeType::CORE_XalAddressNode
-                    || node == NodeType::URO_ExtendedAttributeNode ) {
+                    || node == NodeType::URO_ExtendedAttributeNode
+                    || node == NodeType::URO_KeyValuePairNode) {
 
             return true;
         } else if (node == NodeType::URO_KeyNode) {
-            auto codeSpace = m_model->getAttribute("Key_codeSpace");
             int code = stoi(characters);
-
-            auto attributeKey = m_factory.getCodeValue(codeSpace, code, getDocumentLocation().getDocumentFileName());
-            m_model->setAttribute("attributeKey", attributeKey);
+            _attributeKey = m_factory.getCodeValue(_key_codeSpace, code, getDocumentLocation().getDocumentFileName());
 
             return true;
         } else if (node == NodeType::URO_CodeValueNode) {
-            auto codeSpace = m_model->getAttribute("CodeValue_codeSpace");
             int code = stoi(characters);
 
-            auto attributeValue = m_factory.getCodeValue(codeSpace, code, getDocumentLocation().getDocumentFileName());
-            auto attributeKey = m_model->getAttribute("attributeKey");
-            m_model->setAttribute(attributeKey, attributeValue);
-            std::cout << "m_model->setAttribute( " << attributeKey << ", " << attributeValue << " )" << std::endl;// for debug
+            auto attributeValue = m_factory.getCodeValue(_codeValue_codeSpace, code, getDocumentLocation().getDocumentFileName());
+            m_model->setAttribute(_attributeKey, attributeValue);
+            std::cout << "m_model->setAttribute( " << _attributeKey << ", " << attributeValue << " )" << std::endl;// for debug
 
             return true;
         }

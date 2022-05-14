@@ -34,13 +34,14 @@ const CodeList CodeListHandlerXerces::getCodeList(const std::string codeSpace) c
     return code_list;
 }
 
-XercesHandler::XercesHandler() {
-    _definition_tag_flg = false;
-    _description_tag_flg = false;
-    _name_tag_flg = false;
-    _description = "";
-    _name = "";
-    _content = "";
+XercesHandler::XercesHandler() :
+    _definition_tag_flg(false),
+    _description_tag_flg(false),
+    _name_tag_flg(false),
+    _description(""),
+    _name(""),
+    _content("")
+{ 
 }
 
 CodeList XercesHandler::getCodeList() {
