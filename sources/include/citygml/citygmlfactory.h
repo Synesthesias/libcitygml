@@ -68,7 +68,7 @@ namespace citygml {
 
         void closeFactory();
 
-        const std::string getCodeValue(const std::string codeSpace, int id, const std::string gmlpath);
+        const std::string getCodeValue(const std::string& codeSpace, const std::string& gmlPath, int id);
 
         ~CityGMLFactory();
     protected:

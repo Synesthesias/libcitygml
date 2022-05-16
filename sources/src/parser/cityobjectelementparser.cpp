@@ -42,9 +42,9 @@ namespace citygml {
         : GMLFeatureCollectionElementParser(documentParser, factory, logger)
         , m_lastAttributeType(AttributeType::String)
         , m_genericAttributeSet(nullptr)
-        , _key_codeSpace("")
-        , _codeValue_codeSpace("")
-        , _attributeKey("")
+        , m_lastCodeSpace("")
+        , m_lastCode("")
+        , m_lastAttributeName("")
     {
         m_callback = callback;
     }
@@ -454,9 +454,9 @@ namespace citygml {
         } else if (node == NodeType::URO_ExtendedAttributeNode || node == NodeType::URO_KeyValuePairNode) {
             return true;
         } else if (node == NodeType::URO_KeyNode) {
-            _key_codeSpace = attributes.getAttribute("codeSpace");
+            m_lastCodeSpace = attributes.getAttribute("codeSpace");
         } else if (node == NodeType::URO_CodeValueNode ) {
-            _codeValue_codeSpace =  attributes.getAttribute("codeSpace");
+            m_lastCode =  attributes.getAttribute("codeSpace");
         } else {
             return GMLFeatureCollectionElementParser::parseChildElementStartTag(node, attributes);
         }
@@ -615,15 +615,14 @@ namespace citygml {
             return true;
         } else if (node == NodeType::URO_KeyNode) {
             int code = stoi(characters);
-            _attributeKey = m_factory.getCodeValue(_key_codeSpace, code, getDocumentLocation().getDocumentFileName());
+            m_lastAttributeName = m_factory.getCodeValue(m_lastCodeSpace, getDocumentLocation().getDocumentFileName(), code);
 
             return true;
         } else if (node == NodeType::URO_CodeValueNode) {
             int code = stoi(characters);
 
-            auto attributeValue = m_factory.getCodeValue(_codeValue_codeSpace, code, getDocumentLocation().getDocumentFileName());
-            m_model->setAttribute(_attributeKey, attributeValue);
-            std::cout << "m_model->setAttribute( " << _attributeKey << ", " << attributeValue << " )" << std::endl;// for debug
+            const auto attributeValue = m_factory.getCodeValue(m_lastCode, getDocumentLocation().getDocumentFileName(), code);
+            m_model->setAttribute(m_lastAttributeName, attributeValue);
 
             return true;
         }

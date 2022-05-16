@@ -189,9 +189,9 @@ namespace citygml {
         m_appearanceManager->addAppearanceTarget(obj);
     }
 
-    const std::string CityGMLFactory::getCodeValue(const std::string codeSpace, int id, const std::string gmlpath)
+    const std::string CityGMLFactory::getCodeValue(const std::string& codeSpace, const std::string& gmlPath, int id)
     {
-        const std::string codeSpacePath = std::filesystem::absolute(gmlpath + "/../" + codeSpace).string();
+        const auto codeSpacePath = std::filesystem::absolute(gmlPath + "/../" + codeSpace).string();
 
         if (m_codeLists->find(codeSpacePath) == m_codeLists->end()) {
             if (!std::filesystem::exists(codeSpacePath)) {
@@ -200,15 +200,15 @@ namespace citygml {
             }
             CITYGML_LOG_INFO(m_logger, "parsing " << codeSpacePath);
 
-            CodeListHandlerXerces handler;
-            CodeList code_list = handler.getCodeList(codeSpacePath);
+            CodeListParser handler;
+            const auto code_list = handler.parse(codeSpacePath);
             m_codeLists->emplace(codeSpacePath, code_list);
         }
         
-        std::string codeValue = "None";
+        std::string codeValue;
         if (m_codeLists->find(codeSpacePath) != m_codeLists->end()) {
-            CodeList code_list = m_codeLists->find(codeSpacePath)->second;
-            if (code_list.find(id) != code_list.end()) codeValue = code_list.find(id)->second;
+            const auto codeList = m_codeLists->find(codeSpacePath)->second;
+            if (codeList.find(id) != codeList.end()) codeValue = codeList.find(id)->second;
         }
 
         return codeValue;
