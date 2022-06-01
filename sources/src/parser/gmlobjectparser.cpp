@@ -36,7 +36,6 @@ namespace citygml {
             }
         }
 
-        //std::cout << "Tag " << node.name() << " Started!" << std::endl;
         AttributesMap attributeSet;
         m_attributeHierarchy->push_back(attributeSet);
 
@@ -67,23 +66,18 @@ namespace citygml {
             }
         }
 
-        //std::cout << "Tag " << node.name() << " Ended!" << std::endl;
-
         auto& attributesMap = m_attributeHierarchy->back();
 
         if (m_attributeHierarchy->size() == 1) { // no parent tag
             if (attributesMap.size() == 0) { // no child tag
                 if (m_lastCodeSpace == "") {
                     getObject()->setAttribute(node.name(), characters);
-                    //std::cout << "getObject()->setAttribute(" << node.name() << ", " << characters << "); " << std::endl;
                 } else {
                     const auto codeValue = m_factory.getCodeValue(m_lastCodeSpace, getDocumentLocation().getDocumentFileName(), characters);
                     getObject()->setAttribute(node.name(), codeValue);
-                    //std::cout << "getObject()->setAttribute(" << node.name() << ", " << codeValue << "); " << std::endl;
                 }
             } else { // have child tag
                 getObject()->getAttributes()[node.name()] = attributesMap;
-                //std::cout << "getObject()->getAttributes()[" << node.name() << "] = attributesMap; " << std::endl;
             }
             m_attributeHierarchy->pop_back();
         } else { // have parent tag
@@ -92,18 +86,15 @@ namespace citygml {
                 auto& parent_attributesMap = m_attributeHierarchy->back();
                 if (m_lastCodeSpace == "") {
                     parent_attributesMap[node.name()] = characters;
-                    //std::cout << "parent_attributesMap[" << node.name() << "] = " << characters << "; " << std::endl;
                 } else {
                     const auto codeValue = m_factory.getCodeValue(m_lastCodeSpace, getDocumentLocation().getDocumentFileName(), characters);
                     parent_attributesMap[node.name()] = codeValue;
-                    //std::cout << "parent_attributesMap[" << node.name() << "] = " << codeValue << "; " << std::endl;
                 }
             } else { // have child tag
                 auto my_attributesMap = attributesMap;
                 m_attributeHierarchy->pop_back();
                 auto& parent_attributesMap = m_attributeHierarchy->back();
                 parent_attributesMap[node.name()] = my_attributesMap;
-                //std::cout << "parent_attributesMap[" << node.name() << "] = my_attributesMap; " << std::endl;
             }
         }
         
