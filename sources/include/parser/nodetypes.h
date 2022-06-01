@@ -26,6 +26,9 @@ namespace citygml {
             bool operator!=(const XMLNode& other) const;
 
             bool valid() const;
+
+            void set_name(const std::string& name);
+            void set_prefix(const std::string& name);
         private:
             std::string m_name;
             std::string m_prefix;
