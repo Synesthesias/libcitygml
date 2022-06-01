@@ -55,12 +55,23 @@ namespace citygml {
             return;
         }
 
-        const NodeType::XMLNode& node = NodeType::getXMLNodeFor(name);
+        //const NodeType::XMLNode& node = NodeType::getXMLNodeFor(name);
+        NodeType::XMLNode node = NodeType::getXMLNodeFor(name);
 
+        /*
         if (!node.valid()) {
             CITYGML_LOG_WARN(m_logger, "Found start tag of unknown node <" << name << "> at " << getDocumentLocation() << ". Skip to next element.");
             skipUnknownOrUnexpectedElement(name);
             return;
+        }
+        */
+
+        if (!node.valid()) {
+            size_t pos = name.find_first_of(":");
+            if (pos != std::string::npos) {
+                node.set_name(name.substr(pos + 1));
+                node.set_prefix(name.substr(0, pos));
+            }
         }
 
         if (m_parserStack.empty()) {
@@ -84,11 +95,20 @@ namespace citygml {
             return;
         }
 
-        const NodeType::XMLNode& node = NodeType::getXMLNodeFor(name);
-
+        NodeType::XMLNode node = NodeType::getXMLNodeFor(name);
+        /*
         if (!node.valid()) {
             CITYGML_LOG_WARN(m_logger, "Found end tag of unknown node <" << name << "> at " << getDocumentLocation());
             return;
+        }
+        */
+
+        if (!node.valid()) {
+            size_t pos = name.find_first_of(":");
+            if (pos != std::string::npos) {
+                node.set_name(name.substr(pos + 1));
+                node.set_prefix(name.substr(0, pos));
+            }
         }
 
         if (m_parserStack.empty()) {

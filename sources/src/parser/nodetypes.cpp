@@ -66,6 +66,14 @@ namespace citygml {
         return os;
     }
 
+    void NodeType::XMLNode::set_name(const std::string& name) {
+        m_name = name;
+    }
+
+    void NodeType::XMLNode::set_prefix(const std::string& prefix) {
+        m_prefix = prefix;
+    }
+
     const NodeType::XMLNode NodeType::InvalidNode = XMLNode("", "");
 
 #define INITIALIZE_NODE( prefix, elementname ) \
