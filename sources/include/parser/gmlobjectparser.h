@@ -2,6 +2,7 @@
 
 #include <parser/citygmlelementparser.h>
 #include "citygml/attributesmap.h"
+#include <vector>
 
 namespace citygml {
 
