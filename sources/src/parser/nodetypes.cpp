@@ -66,11 +66,11 @@ namespace citygml {
         return os;
     }
 
-    void NodeType::XMLNode::set_name(const std::string& name) {
+    void NodeType::XMLNode::setName(const std::string& name) {
         m_name = name;
     }
 
-    void NodeType::XMLNode::set_prefix(const std::string& prefix) {
+    void NodeType::XMLNode::setPrefix(const std::string& prefix) {
         m_prefix = prefix;
     }
 

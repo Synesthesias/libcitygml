@@ -60,8 +60,8 @@ namespace citygml {
         if (!node.valid()) {
             size_t pos = name.find_first_of(":");
             if (pos != std::string::npos) {
-                node.set_name(name.substr(pos + 1));
-                node.set_prefix(name.substr(0, pos));
+                node.setName(name.substr(pos + 1));
+                node.setPrefix(name.substr(0, pos));
             }
         }
 
@@ -91,8 +91,8 @@ namespace citygml {
         if (!node.valid()) {
             size_t pos = name.find_first_of(":");
             if (pos != std::string::npos) {
-                node.set_name(name.substr(pos + 1));
-                node.set_prefix(name.substr(0, pos));
+                node.setName(name.substr(pos + 1));
+                node.setPrefix(name.substr(0, pos));
             }
         }
 

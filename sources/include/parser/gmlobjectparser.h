@@ -14,6 +14,7 @@ namespace citygml {
     class GMLObjectElementParser : public CityGMLElementParser {
     public:
         GMLObjectElementParser(CityGMLDocumentParser& documentParser, CityGMLFactory& factory, std::shared_ptr<CityGMLLogger> logger);
+        const AttributeType detectAttributeType(const std::string& characters);
 
     private:
         std::string m_lastCodeSpace;

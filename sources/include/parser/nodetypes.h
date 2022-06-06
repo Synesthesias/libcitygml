@@ -27,8 +27,8 @@ namespace citygml {
 
             bool valid() const;
 
-            void set_name(const std::string& name);
-            void set_prefix(const std::string& name);
+            void setName(const std::string& name);
+            void setPrefix(const std::string& name);
         private:
             std::string m_name;
             std::string m_prefix;

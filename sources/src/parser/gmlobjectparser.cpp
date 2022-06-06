@@ -4,15 +4,16 @@
 #include "parser/attributes.h"
 #include <citygml/citygmlfactory.h>
 #include "parser/documentlocation.h"
-
+#include <regex>
 #include <iostream>
 
 namespace citygml {
 
     GMLObjectElementParser::GMLObjectElementParser(CityGMLDocumentParser& documentParser, CityGMLFactory& factory, std::shared_ptr<CityGMLLogger> logger)
-        : CityGMLElementParser(documentParser, factory, logger) {
-        m_lastCodeSpace = "";
-        m_attributeHierarchy = std::shared_ptr<std::vector<AttributesMap>>(new std::vector<AttributesMap>);
+        : CityGMLElementParser(documentParser, factory, logger),
+        m_lastCodeSpace(""),
+        m_attributeHierarchy(std::make_shared<std::vector<AttributesMap>>()) {
+
     }
 
     bool GMLObjectElementParser::parseChildElementStartTag(const NodeType::XMLNode& node, Attributes& attributes) {
@@ -71,10 +72,10 @@ namespace citygml {
         if (m_attributeHierarchy->size() == 1) { // no parent tag
             if (attributesMap.size() == 0) { // no child tag
                 if (m_lastCodeSpace == "") {
-                    getObject()->setAttribute(node.name(), characters);
+                    getObject()->setAttribute(node.name(), characters, detectAttributeType(characters));
                 } else {
                     const auto codeValue = m_factory.getCodeValue(m_lastCodeSpace, getDocumentLocation().getDocumentFileName(), characters);
-                    getObject()->setAttribute(node.name(), codeValue);
+                    getObject()->setAttribute(node.name(), codeValue, detectAttributeType(codeValue));
                 }
             } else { // have child tag
                 getObject()->getAttributes()[node.name()] = attributesMap;
@@ -85,10 +86,10 @@ namespace citygml {
                 m_attributeHierarchy->pop_back();
                 auto& parent_attributesMap = m_attributeHierarchy->back();
                 if (m_lastCodeSpace == "") {
-                    parent_attributesMap[node.name()] = characters;
+                    parent_attributesMap[node.name()] = AttributeValue(characters, detectAttributeType(characters));
                 } else {
                     const auto codeValue = m_factory.getCodeValue(m_lastCodeSpace, getDocumentLocation().getDocumentFileName(), characters);
-                    parent_attributesMap[node.name()] = codeValue;
+                    parent_attributesMap[node.name()] = AttributeValue(codeValue, detectAttributeType(codeValue));
                 }
             } else { // have child tag
                 auto my_attributesMap = attributesMap;
@@ -101,4 +102,27 @@ namespace citygml {
         return true;
     }
 
+    const AttributeType GMLObjectElementParser::detectAttributeType(const std::string& characters) {
+        if (characters == "true" || characters == "false") {
+            return AttributeType::Boolean;
+        }
+        std::regex re_int(R"([0-9]+)");
+        if (std::regex_match(characters, re_int)) {
+            return AttributeType::Integer;
+        }
+        std::regex re_double(R"([0-9]+\.[0-9]*)");
+        if (std::regex_match(characters, re_double)) {
+            return AttributeType::Double;
+        }
+        std::regex re_date(R"(\d{4}-\d\d-\d\d)");
+        if (std::regex_match(characters, re_date)) {
+            return AttributeType::Date;
+        }
+        std::regex re_uri(R"(http.*)");
+        if (std::regex_match(characters, re_uri)) {
+            return AttributeType::Uri;
+        }
+
+        return AttributeType::String;
+    }
 }
