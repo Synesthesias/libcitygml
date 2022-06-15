@@ -18,6 +18,8 @@ namespace citygml {
         // ElementParser interface
         virtual std::string elementParserName() const override;
         virtual bool handlesElement(const NodeType::XMLNode &node) const override;
+        void SetUnknownGeometryComingFlg(bool flg);
+
     protected:
         // CityGMLElementParser interface
         virtual bool parseElementStartTag(const NodeType::XMLNode& node, Attributes& attributes) override;
@@ -34,6 +36,7 @@ namespace citygml {
         int m_lodLevel;
         CityObject::CityObjectsType m_parentType;
         std::string m_orientation;
+        bool m_unknownGeometryCommingFlg;
     };
 
 }

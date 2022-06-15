@@ -10,9 +10,10 @@
 namespace citygml {
 
     GMLObjectElementParser::GMLObjectElementParser(CityGMLDocumentParser& documentParser, CityGMLFactory& factory, std::shared_ptr<CityGMLLogger> logger)
-        : CityGMLElementParser(documentParser, factory, logger),
-        m_lastCodeSpace(""),
-        m_attributeHierarchy(std::make_shared<std::vector<AttributesMap>>()) {
+        : CityGMLElementParser(documentParser, factory, logger)
+        ,m_lastCodeSpace("")
+        ,m_adeDataComingFlg(false)
+        ,m_attributeHierarchy(std::make_shared<std::vector<AttributesMap>>()) {
 
     }
 
@@ -30,17 +31,20 @@ namespace citygml {
             return true;
         }
 
+        if (node != NodeType::InvalidNode) return true;
+
         size_t pos = node.name().find_first_of(":");
         if (pos != std::string::npos) {
             if (isupper(node.name().substr(pos + 1).at(0))) {// Ignore Tag start with capital letter
+                m_adeDataComingFlg = false;
                 return true;
             }
         }
-
         AttributesMap attributeSet;
         m_attributeHierarchy->push_back(attributeSet);
 
-        m_lastCodeSpace = attributes.getAttribute("codeSpace");
+        if(!m_adeDataComingFlg) m_lastCodeSpace = attributes.getAttribute("codeSpace");// ignore attributes because it's not correct one when m_adeDataComingFlg is true
+        m_adeDataComingFlg = false;
 
         return true;
     }
@@ -59,6 +63,8 @@ namespace citygml {
             getObject()->setAttribute(node.name(), characters);
             return true;
         }
+
+        if (node != NodeType::InvalidNode) return true;
 
         size_t pos = node.name().find_first_of(":");
         if (pos != std::string::npos) {
@@ -124,5 +130,46 @@ namespace citygml {
         }
 
         return AttributeType::String;
+    }
+
+    void GMLObjectElementParser::setAdeDataComingFlg(bool flg) {
+        m_adeDataComingFlg = flg;
+    }
+
+    bool GMLObjectElementParser::getAdeDataComingFlg() {
+        return m_adeDataComingFlg;
+    }
+
+    bool GMLObjectElementParser::parseChildElementBothTag(const NodeType::XMLNode& node, const std::string& characters) {
+        AttributesMap attributeSet;
+        m_attributeHierarchy->push_back(attributeSet);
+
+        if (node == NodeType::GML_DescriptionNode
+            || node == NodeType::GML_IdentifierNode
+            || node == NodeType::GML_NameNode
+            || node == NodeType::GML_DescriptionReferenceNode
+            || node == NodeType::GML_MetaDataPropertyNode) {
+
+            getObject()->setAttribute(node.name(), characters);
+            return true;
+        }
+
+        size_t pos = node.name().find_first_of(":");
+        if (pos != std::string::npos) {
+            if (isupper(node.name().substr(pos + 1).at(0))) {// Ignore Tag start with capital letter
+                return true;
+            }
+        }
+
+        if (m_attributeHierarchy->size() == 1) { // no parent tag
+            getObject()->setAttribute(node.name(), characters, detectAttributeType(characters));
+            m_attributeHierarchy->pop_back();
+        }
+        else { // have parent tag
+            m_attributeHierarchy->pop_back();
+            auto& parent_attributesMap = m_attributeHierarchy->back();
+            parent_attributesMap[node.name()] = AttributeValue(characters, detectAttributeType(characters));
+        }
+        return true;
     }
 }

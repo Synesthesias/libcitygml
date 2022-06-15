@@ -15,10 +15,14 @@ namespace citygml {
     public:
         GMLObjectElementParser(CityGMLDocumentParser& documentParser, CityGMLFactory& factory, std::shared_ptr<CityGMLLogger> logger);
         const AttributeType detectAttributeType(const std::string& characters);
+        void setAdeDataComingFlg(bool flg);
+        bool getAdeDataComingFlg();
+        bool parseChildElementBothTag(const NodeType::XMLNode& node, const std::string& characters);
 
     private:
         std::string m_lastCodeSpace;
         std::shared_ptr<std::vector<AttributesMap>> m_attributeHierarchy;
+        bool m_adeDataComingFlg;
 
     protected:
         // CityGMLElementParser interface
