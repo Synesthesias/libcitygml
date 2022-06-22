@@ -8,6 +8,7 @@
 #include "parser/polygonelementparser.h"
 #include "parser/skipelementparser.h"
 #include "parser/delayedchoiceelementparser.h"
+#include "parser/unknownelementparser.h"
 #include "parser/linestringelementparser.h"
 #include "parser/addressparser.h"
 #include "parser/rectifiedgridcoverageparser.h"
@@ -247,6 +248,7 @@ namespace citygml {
         if (m_unknownCityObjectCommingFlg) {
             m_unknownCityObjectCommingFlg = false;
             m_model = m_factory.createCityObject(attributes.getCityGMLIDAttribute(), CityObject::CityObjectsType::COT_Unknown);
+            m_model->setAttribute(node.name(), attributes.getCityGMLIDAttribute());
             return true;
         } else {
             if (it == typeIDTypeMap.end()) {
@@ -468,13 +470,12 @@ namespace citygml {
             } else if (attributes.getAttribute("codeSpace") != "") {
                 return GMLFeatureCollectionElementParser::parseChildElementStartTag(node, attributes);
             } else {
-                DelayedChoiceElementParser* dcep = new DelayedChoiceElementParser(m_documentParser, m_logger, {
+                UnknownElementParser* dcep = new UnknownElementParser(m_documentParser, m_logger, {
                     new GeometryElementParser(m_documentParser, m_factory, m_logger, 2, m_model->getType(), [this](Geometry* geom) { m_model->addGeometry(geom); }),
                     new CityObjectElementParser(m_documentParser, m_factory, m_logger, [this](CityObject* obj) { m_model->addChildCityObject(obj); }),
                     this
                     });
                 dcep->setStockNode(node);
-                dcep->setUnknownNodeFlg(true);
                 setParserForNextElement(dcep);
             }
         }else{

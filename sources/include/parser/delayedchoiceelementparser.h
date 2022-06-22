@@ -30,13 +30,8 @@ namespace citygml {
         virtual bool handlesElement(const NodeType::XMLNode& node) const;
         virtual std::string elementParserName() const;
 
-        void setUnknownNodeFlg(bool flg);
-        void setStockNode(const NodeType::XMLNode& node);
-
     private:
         std::vector<ElementParser*> m_choices;
-        bool m_unknownNodeFlg;
-        NodeType::XMLNode m_stockNode;
     };
 
 }
