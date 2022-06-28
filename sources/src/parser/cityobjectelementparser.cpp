@@ -46,7 +46,6 @@ namespace citygml {
         , m_lastCodeSpace("")
         , m_lastCode("")
         , m_lastAttributeName("")
-        , m_unknownCityObjectCommingFlg(false)
     {
         m_callback = callback;
     }
@@ -244,20 +243,14 @@ namespace citygml {
         initializeTypeIDTypeMap();
 
         auto it = typeIDTypeMap.find(node.typeID());
-
-        if (m_unknownCityObjectCommingFlg) {
-            m_unknownCityObjectCommingFlg = false;
+       
+        if (it == typeIDTypeMap.end()) {
             m_model = m_factory.createCityObject(attributes.getCityGMLIDAttribute(), CityObject::CityObjectsType::COT_Unknown);
-            m_model->setAttribute(node.name(), attributes.getCityGMLIDAttribute());
-            return true;
         } else {
-            if (it == typeIDTypeMap.end()) {
-                CITYGML_LOG_ERROR(m_logger, "Expected start tag of CityObject but got <" << node.name() << "> at " << getDocumentLocation());
-                throw std::runtime_error("Unexpected start tag found.");
-            }
             m_model = m_factory.createCityObject(attributes.getCityGMLIDAttribute(), static_cast<CityObject::CityObjectsType>(it->second));
-            return true;
         }
+        return true;
+        
     }
 
     bool CityObjectElementParser::parseElementEndTag(const NodeType::XMLNode&, const std::string&)
@@ -700,10 +693,6 @@ namespace citygml {
                                                                    })
         }));
 
-    }
-
-    void CityObjectElementParser::SetUnknownCityObjectComingFlg(bool flg) {
-        m_unknownCityObjectCommingFlg = flg;
     }
 
 }

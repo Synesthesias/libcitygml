@@ -22,22 +22,18 @@ namespace citygml {
     bool UnknownElementParser::startElement(const NodeType::XMLNode& node, Attributes& attributes)
     {
         m_documentParser.removeCurrentElementParser(this);
+        dynamic_cast <CityObjectElementParser*>(m_choices[2])->setAdeDataComingFlg(true);
+        m_choices[2]->startElement(m_stockNode, attributes);// for parent node
         if (attributes.getAttribute("gml:id") == "") {
-            dynamic_cast <CityObjectElementParser*>(m_choices[2])->setAdeDataComingFlg(true);
-            m_choices[2]->startElement(m_stockNode, attributes);// for parent node
             return m_choices[2]->startElement(node, attributes);
         } else {
             if(m_choices[0]->handlesElement(node)){// check for GeometryElementParser
-                m_documentParser.setCurrentElementParser(m_choices[0]); // set GeometryElementParser
                 delete m_choices[1];
-                dynamic_cast <GeometryElementParser*>(m_choices[0])->SetUnknownGeometryComingFlg(true);
-                m_choices[0]->startElement(m_stockNode, attributes);
+                setParserForNextElement(m_choices[0]);
                 return m_choices[0]->startElement(node, attributes);
             } else {
-                m_documentParser.setCurrentElementParser(m_choices[1]);// set CityObjectElementParser
                 delete m_choices[0];
-                dynamic_cast <CityObjectElementParser*>(m_choices[1])->SetUnknownCityObjectComingFlg(true);
-                m_choices[1]->startElement(m_stockNode, attributes);
+                setParserForNextElement(m_choices[1]);
                 return m_choices[1]->startElement(node, attributes);
             }
         }
@@ -46,8 +42,6 @@ namespace citygml {
     bool UnknownElementParser::endElement(const NodeType::XMLNode& node, const std::string& characters)
     {
         m_documentParser.removeCurrentElementParser(this);
-        delete m_choices[0];
-        delete m_choices[1];
         return dynamic_cast <CityObjectElementParser*>(m_choices[2])->parseChildElementBothTag(node, characters);   
     }
 

@@ -29,7 +29,6 @@ namespace citygml {
     GeometryElementParser::GeometryElementParser(CityGMLDocumentParser& documentParser, CityGMLFactory& factory, std::shared_ptr<CityGMLLogger> logger,
                                                  int lodLevel, CityObject::CityObjectsType parentType,  std::function<void(Geometry*)> callback)
         : GMLObjectElementParser(documentParser, factory, logger)
-        , m_unknownGeometryCommingFlg(false)
     {
         m_callback = callback;
         m_lodLevel = lodLevel;
@@ -70,21 +69,16 @@ namespace citygml {
         return geometryTypeIDSet.count(node.typeID()) > 0;
     }
 
-    bool GeometryElementParser::parseElementStartTag(const NodeType::XMLNode& node, Attributes& attributes)
-    {
-        std::string srsName = attributes.getAttribute("srsName");
-        if (m_unknownGeometryCommingFlg) {
-            m_model = m_factory.createGeometry(attributes.getCityGMLIDAttribute(), m_parentType, m_lodLevel, srsName);
-            m_model->setAttribute(node.name(), attributes.getCityGMLIDAttribute());
-            m_unknownGeometryCommingFlg = false;
-        } else {
-            if (!handlesElement(node)) {
-                CITYGML_LOG_ERROR(m_logger, "Expected start tag of GeometryObject but got <" << node.name() << "> at " << getDocumentLocation());
-                throw std::runtime_error("Unexpected start tag found.");
-            }
-            m_model = m_factory.createGeometry(attributes.getCityGMLIDAttribute(), m_parentType, m_lodLevel, srsName);
+    bool GeometryElementParser::parseElementStartTag(const NodeType::XMLNode& node, Attributes& attributes) {
+
+        if (!handlesElement(node)) {
+            CITYGML_LOG_ERROR(m_logger, "Expected start tag of GeometryObject but got <" << node.name() << "> at " << getDocumentLocation());
+            throw std::runtime_error("Unexpected start tag found.");
         }
 
+        std::string srsName = attributes.getAttribute("srsName");
+
+        m_model = m_factory.createGeometry(attributes.getCityGMLIDAttribute(), m_parentType, m_lodLevel, srsName);
         m_orientation = attributes.getAttribute("orientation", "+"); // A gml:OrientableSurface may define a negative orientation
         return true;
 
@@ -176,7 +170,4 @@ namespace citygml {
         return m_model;
     }
 
-    void GeometryElementParser::SetUnknownGeometryComingFlg(bool flg) {
-        m_unknownGeometryCommingFlg = flg;
-    }
 }

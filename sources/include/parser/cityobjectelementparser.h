@@ -18,7 +18,6 @@ namespace citygml {
         // ElementParser interface
         virtual std::string elementParserName() const override;
         virtual bool handlesElement(const NodeType::XMLNode &node) const override;
-        void SetUnknownCityObjectComingFlg(bool flg);
 
     protected:
 
@@ -61,7 +60,6 @@ namespace citygml {
         std::string m_lastCodeSpace;
         std::string m_lastCode;
 
-        bool m_unknownCityObjectCommingFlg;
     };
 
 }
