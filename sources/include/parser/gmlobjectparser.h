@@ -18,11 +18,13 @@ namespace citygml {
         void setAdeDataComingFlg(bool flg);
         bool getAdeDataComingFlg();
         bool parseChildElementBothTag(const NodeType::XMLNode& node, const std::string& characters);
+        void setSkippedTag(std::string tag_name);
 
     private:
         std::string m_lastCodeSpace;
         std::shared_ptr<std::vector<AttributesMap>> m_attributeHierarchy;
         bool m_adeDataComingFlg;
+        std::shared_ptr<std::vector<std::string>> m_skipped_tag;
 
     protected:
         // CityGMLElementParser interface

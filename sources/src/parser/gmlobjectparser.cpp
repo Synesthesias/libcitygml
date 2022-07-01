@@ -13,7 +13,8 @@ namespace citygml {
         : CityGMLElementParser(documentParser, factory, logger)
         ,m_lastCodeSpace("")
         ,m_adeDataComingFlg(false)
-        ,m_attributeHierarchy(std::make_shared<std::vector<AttributesMap>>()) {
+        ,m_attributeHierarchy(std::make_shared<std::vector<AttributesMap>>())
+        ,m_skipped_tag(std::make_shared<std::vector<std::string>>()) {
 
     }
 
@@ -69,6 +70,13 @@ namespace citygml {
         size_t pos = node.name().find_first_of(":");
         if (pos != std::string::npos) {
             if (isupper(node.name().substr(pos + 1).at(0))) {// Ignore Tag start with capital letter
+                return true;
+            }
+        }
+
+        if (m_skipped_tag->size() != 0) {
+            if (m_skipped_tag->back() == node.name()) {
+                m_skipped_tag->pop_back();
                 return true;
             }
         }
@@ -140,19 +148,7 @@ namespace citygml {
         return m_adeDataComingFlg;
     }
 
-    bool GMLObjectElementParser::parseChildElementBothTag(const NodeType::XMLNode& node, const std::string& characters) {
-        AttributesMap attributeSet;
-        m_attributeHierarchy->push_back(attributeSet);
-
-        if (node == NodeType::GML_DescriptionNode
-            || node == NodeType::GML_IdentifierNode
-            || node == NodeType::GML_NameNode
-            || node == NodeType::GML_DescriptionReferenceNode
-            || node == NodeType::GML_MetaDataPropertyNode) {
-
-            getObject()->setAttribute(node.name(), characters);
-            return true;
-        }
+    bool GMLObjectElementParser::parseChildElementBothTag(const NodeType::XMLNode& node, const std::string& characters) { // Only called from UnknownElementParser::endElement
 
         size_t pos = node.name().find_first_of(":");
         if (pos != std::string::npos) {
@@ -161,15 +157,17 @@ namespace citygml {
             }
         }
 
-        if (m_attributeHierarchy->size() == 1) { // no parent tag
+        if (m_attributeHierarchy->size() == 0) { // no parent tag
             getObject()->setAttribute(node.name(), characters, detectAttributeType(characters));
-            m_attributeHierarchy->pop_back();
         }
         else { // have parent tag
-            m_attributeHierarchy->pop_back();
             auto& parent_attributesMap = m_attributeHierarchy->back();
             parent_attributesMap[node.name()] = AttributeValue(characters, detectAttributeType(characters));
         }
         return true;
+    }
+
+    void GMLObjectElementParser::setSkippedTag(std::string tag_name) {
+        m_skipped_tag->push_back(tag_name);
     }
 }

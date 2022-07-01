@@ -22,11 +22,13 @@ namespace citygml {
     bool UnknownElementParser::startElement(const NodeType::XMLNode& node, Attributes& attributes)
     {
         m_documentParser.removeCurrentElementParser(this);
-        dynamic_cast <CityObjectElementParser*>(m_choices[2])->setAdeDataComingFlg(true);
-        m_choices[2]->startElement(m_stockNode, attributes);// for parent node
         if (attributes.getAttribute("gml:id") == "") {
+            dynamic_cast <CityObjectElementParser*>(m_choices[2])->setAdeDataComingFlg(true);
+            m_choices[2]->startElement(m_stockNode, attributes);// for parent node
             return m_choices[2]->startElement(node, attributes);
         } else {
+            dynamic_cast <CityObjectElementParser*>(m_choices[2])->setSkippedTag(m_stockNode.name());
+
             if(m_choices[0]->handlesElement(node)){// check for GeometryElementParser
                 delete m_choices[1];
                 setParserForNextElement(m_choices[0]);
