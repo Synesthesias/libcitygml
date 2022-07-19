@@ -82,7 +82,14 @@ namespace citygml
     {
     }
 
-    const ConstCityObjects CityModel::getAllCityObjectsOfType( CityObject::CityObjectsType type ) const
+    std::shared_ptr<ConstCityObjects> CityModel::getAllCityObjectsOfType( CityObject::CityObjectsType type ) const
+    {
+        auto result = std::make_shared<ConstCityObjects>();
+        getAllCityObjectsOfType(type, *result);
+        return result;
+    }
+
+    void CityModel::getAllCityObjectsOfType(CityObject::CityObjectsType type, ConstCityObjects& cityObjects) const
     {
         std::vector<CityObject::CityObjectsType> keys;
         for (const auto& [key, _] : m_cityObjectsMap) {
@@ -92,19 +99,14 @@ namespace citygml
         }
 
         if (keys.empty())
-            return {};
+            return;
 
-        if(keys.size() == 1){
-            return m_cityObjectsMap.find(keys[0])->second;
-        }
-
-        ConstCityObjects result;
         for (const auto& key : keys) {
-            const auto city_objects = m_cityObjectsMap.find(key)->second;
-            result.insert(result.end(), city_objects.begin(), city_objects.end());
+            const auto value = m_cityObjectsMap.find(key)->second;
+            cityObjects.insert(cityObjects.end(), value.begin(), value.end());
         }
-        return result;
     }
+
 
     const CityObject* CityModel::getCityObjectById(const std::string& id) const {
         if(m_idToCityObjMap.count(id) == 0){

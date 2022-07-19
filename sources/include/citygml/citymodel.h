@@ -36,7 +36,8 @@ namespace citygml {
         CityObject& getRootCityObject(int i);
         const CityObject& getRootCityObject(int i) const;
 
-        const ConstCityObjects getAllCityObjectsOfType( CityObject::CityObjectsType type ) const;
+        std::shared_ptr<ConstCityObjects> getAllCityObjectsOfType(CityObject::CityObjectsType type) const;
+        void getAllCityObjectsOfType(CityObject::CityObjectsType type, ConstCityObjects& cityObjects) const;
 
         /**
          * @brief Return a CityObject from ID. If not found, return nullptr.
