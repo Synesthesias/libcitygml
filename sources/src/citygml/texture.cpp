@@ -87,8 +87,17 @@ namespace citygml {
         return std::static_pointer_cast<const Texture>(shared_from_this());
     }
 
+    const std::shared_ptr<const Texture> Texture::noneTexture = makeNoneTexture();
+
     Texture::~Texture()
     {
+    }
+
+    std::shared_ptr<const Texture> Texture::makeNoneTexture() {
+        auto tex = new Texture("noneTexture");
+        tex->m_url = std::string("noneTexture");
+        auto ret = std::shared_ptr<const Texture>(tex);
+        return ret;
     }
 
 
