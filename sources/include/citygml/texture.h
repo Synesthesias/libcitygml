@@ -47,8 +47,6 @@ namespace citygml {
         virtual std::shared_ptr<Texture> asTexture() override;
         virtual std::shared_ptr<const Texture> asTexture() const override;
 
-        static const std::shared_ptr<const Texture> noneTexture;
-
         virtual ~Texture();
 
     protected:
@@ -58,7 +56,6 @@ namespace citygml {
         bool m_repeat;
         WrapMode m_wrapMode;
         TVec4f m_borderColor;
-        static std::shared_ptr<const Texture> makeNoneTexture();
     };
 
 }
