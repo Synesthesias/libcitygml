@@ -61,11 +61,7 @@ namespace citygml
     }
 
     void CityModel::addToIdToCityObjMapRecursive(const CityObject *cityObj) {
-        const auto& objID = cityObj->getId();
-        if(m_idToCityObjMap.find(objID) == m_idToCityObjMap.end()){
-            m_idToCityObjMap[objID] = {};
-        }
-        m_idToCityObjMap.at(objID).push_back(cityObj);
+        m_idToCityObjMap[cityObj->getId()] = cityObj;
         for (int i = 0; i < cityObj->getChildCityObjectsCount(); i++ ) {
             addToIdToCityObjMapRecursive(&cityObj->getChildCityObject(i));
         }
@@ -110,12 +106,12 @@ namespace citygml
         return result;
     }
 
-    std::vector<const CityObject *> CityModel::getCityObjectsById(const std::string& id) const {
-        if(m_idToCityObjMap.find(id) == m_idToCityObjMap.end()){
-            return {};
+    const CityObject* CityModel::getCityObjectById(const std::string& id) const {
+        if(m_idToCityObjMap.count(id) == 0){
+            return nullptr;
         }
-        auto foundObjs = m_idToCityObjMap.at(id);
-        return foundObjs;
+        auto foundObj = m_idToCityObjMap.at(id);
+        return foundObj;
     }
 
     const ConstCityObjects CityModel::getRootCityObjects() const
