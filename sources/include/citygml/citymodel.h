@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 #include <map>
+#include <list>
 
 #include <citygml/citygml_api.h>
 #include <citygml/cityobject.h>
@@ -19,7 +20,7 @@ namespace citygml {
     typedef std::vector<std::unique_ptr<CityObject> > CityObjects;
     typedef std::vector<const CityObject*> ConstCityObjects;
     typedef std::map< CityObject::CityObjectsType, std::vector<const CityObject*> > CityObjectsMap;
-    typedef std::map<std::string, const CityObject*> IdToCityObjMap;
+    typedef std::map<std::string, std::vector<const CityObject*>> IdToCityObjsMap;
 
     class LIBCITYGML_EXPORT CityModel : public FeatureObject
     {
@@ -39,9 +40,9 @@ namespace citygml {
         const ConstCityObjects getAllCityObjectsOfType( CityObject::CityObjectsType type ) const;
 
         /**
-         * @brief Return a CityObject from ID. If not found, return nullptr.
+         * @brief Return CityObjects from ID.
          */
-        const CityObject* getCityObjectById(const std::string& id ) const;
+        [[nodiscard]] std::vector<const CityObject *> getCityObjectsById(const std::string& id ) const;
 
         const std::string& getSRSName() const;
 
@@ -64,7 +65,7 @@ namespace citygml {
 
         CityObjectsMap m_cityObjectsMap;
 
-        IdToCityObjMap m_idToCityObjMap;
+        IdToCityObjsMap m_idToCityObjMap;
 
         std::string m_srsName;
 
