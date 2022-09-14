@@ -53,7 +53,7 @@ namespace citygml {
         ~CityModel();
 
         const std::string& getGmlPath() const;
-        void setGmlPath(const std::string& gml_path);
+        void setGmlPath(const std::string& gmlPath);
 
     protected:
 

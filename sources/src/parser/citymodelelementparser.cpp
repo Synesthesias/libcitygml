@@ -48,8 +48,7 @@ namespace citygml {
 
         std::filesystem::path path = getDocumentLocation().getDocumentFilePath();
         if (path.is_relative()) {
-            auto abs_path = std::filesystem::absolute(path);
-            abs_path.swap(path);
+            path = std::filesystem::absolute(path);
         }
 
         m_model->setGmlPath(path.u8string());
