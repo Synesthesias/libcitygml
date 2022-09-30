@@ -39,17 +39,17 @@ namespace citygml {
         vec_xyz.reserve(len);
         constexpr double r = 6378137;
         constexpr double pi2 = 3.141592653589 * 2.0;
-        auto ref_lat = m_vertices[0].x / pi2;
-        auto ref_lon = m_vertices[0].y / pi2;
-        auto sin_ref_lat = std::sin(ref_lat);
-        auto cos_ref_lat = std::cos(ref_lat);
-        auto cos_ref_lon = std::cos(ref_lon);
+        const auto ref_lat = m_vertices[0].x / pi2;
+        const auto ref_lon = m_vertices[0].y / pi2;
+        const auto sin_ref_lat = std::sin(ref_lat);
+        const auto cos_ref_lat = std::cos(ref_lat);
+        const auto cos_ref_lon = std::cos(ref_lon);
         for (unsigned int i=0; i < len; i++){
-            auto sin_lat = std::sin(m_vertices[i].x / pi2);
-            auto cos_lat = std::cos(m_vertices[i].x / pi2);
-            auto cos_lon = std::cos(m_vertices[i].y / pi2);
-            auto diff_y = r * (sin_lat - sin_ref_lat);
-            auto diff_x = r * (cos_lat * cos_lon - cos_ref_lat * cos_ref_lon);
+            const auto sin_lat = std::sin(m_vertices[i].x / pi2);
+            const auto cos_lat = std::cos(m_vertices[i].x / pi2);
+            const auto cos_lon = std::cos(m_vertices[i].y / pi2);
+            const auto diff_y = r * (sin_lat - sin_ref_lat);
+            const auto diff_x = r * (cos_lat * cos_lon - cos_ref_lat * cos_ref_lon);
             vec_xyz.emplace_back(diff_y, diff_x, m_vertices[i].z);
         }
 
