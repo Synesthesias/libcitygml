@@ -50,7 +50,7 @@ namespace citygml {
             auto cos_lon = std::cos(m_vertices[i].y / pi2);
             auto diff_y = r * (sin_lat - sin_ref_lat);
             auto diff_x = r * (cos_lat * cos_lon - cos_ref_lat * cos_ref_lon);
-            vec_xyz.emplace_back(diff_x, diff_y, m_vertices[i].z);
+            vec_xyz.emplace_back(diff_y, diff_x, m_vertices[i].z);
         }
 
         // Calculate normal.
@@ -65,7 +65,7 @@ namespace citygml {
             n.y += ( current.z - next.z ) * ( current.x + next.x );
             n.z += ( current.x - next.x ) * ( current.y + next.y );
         }
-        return -n.normal();
+        return n.normal();
     }
 
     std::vector<TVec3d>& LinearRing::getVertices()
