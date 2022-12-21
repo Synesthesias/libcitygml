@@ -6,8 +6,10 @@ ENDIF (NOT DEFINED CMAKE_MODULE_PATH)
 
 SET( target citygml )
 
-FIND_PACKAGE( OpenGL REQUIRED )
-FIND_PACKAGE( Xerces REQUIRED )
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
+  FIND_PACKAGE( OpenGL REQUIRED )
+  FIND_PACKAGE( Xerces REQUIRED )
+endif()
 
 # gdal library
 OPTION(LIBCITYGML_USE_GDAL "Set to ON to build libcitygml with GDAL library so that it supports coordinates transformations." ON)
@@ -138,7 +140,7 @@ else()
     src/citygml/materialtargetdefinition.cpp
     src/citygml/texturecoordinates.cpp
     src/citygml/appearancetarget.cpp
-    src/citygml/citygmlfactory.cpp
+    #src/citygml/citygmlfactory.cpp
     src/citygml/polygonmanager.cpp
     src/citygml/geometrymanager.cpp
     src/citygml/linestring.cpp
@@ -156,87 +158,137 @@ if(UNIX)
   endif (APPLE)
 endif(UNIX)
 
-SET(PUBLIC_HEADER
-  include/citygml/citygml_api.h
-  include/citygml/citygml_export.h
-  include/citygml/attributesmap.h
-  include/citygml/enum_type_bitmask.h
-  include/citygml/citygmllogger.h
-  include/citygml/polygon.h
-  include/citygml/material.h
-  include/citygml/geometry.h
-  include/citygml/object.h
-  include/citygml/featureobject.h
-  include/citygml/georeferencedtexture.h
-  include/citygml/cityobject.h
-  include/citygml/envelope.h
-  include/citygml/appearance.h
-  include/citygml/vecs.hpp
-  include/citygml/citymodel.h
-  include/citygml/linearring.h
-  include/citygml/citygml.h
-  include/citygml/transformmatrix.h
-  include/citygml/implictgeometry.h
-  include/citygml/tesselator.h
-        include/citygml/texture.h
-  include/citygml/appearancetargetdefinition.h
-  include/citygml/texturetargetdefinition.h
-  include/citygml/materialtargetdefinition.h
-  include/citygml/texturecoordinates.h
-  include/citygml/appearancetarget.h
-  include/citygml/citygmlfactory.h
-  include/citygml/linestring.h
-  include/citygml/address.h
-  include/citygml/rectifiedgridcoverage.h
-  include/citygml/externalreference.h
-)
 
-SET(HEADERS
-  ${PUBLIC_HEADER}
 
-  ${CMAKE_MODULE_PATH}/citygml_api.h.in
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
+    SET(PUBLIC_HEADER
+      include/citygml/citygml_api.h
+      include/citygml/citygml_export.h
+      include/citygml/attributesmap.h
+      include/citygml/enum_type_bitmask.h
+      include/citygml/citygmllogger.h
+      include/citygml/polygon.h
+      include/citygml/material.h
+      include/citygml/geometry.h
+      include/citygml/object.h
+      include/citygml/featureobject.h
+      include/citygml/georeferencedtexture.h
+      include/citygml/cityobject.h
+      include/citygml/envelope.h
+      include/citygml/appearance.h
+      include/citygml/vecs.hpp
+      include/citygml/citymodel.h
+      include/citygml/linearring.h
+      include/citygml/citygml.h
+      include/citygml/transformmatrix.h
+      include/citygml/implictgeometry.h
+      include/citygml/tesselator.h
+      include/citygml/texture.h
+      include/citygml/appearancetargetdefinition.h
+      include/citygml/texturetargetdefinition.h
+      include/citygml/materialtargetdefinition.h
+      include/citygml/texturecoordinates.h
+      include/citygml/appearancetarget.h
+      include/citygml/citygmlfactory.h
+      include/citygml/linestring.h
+      include/citygml/address.h
+      include/citygml/rectifiedgridcoverage.h
+      include/citygml/externalreference.h
+    )
 
-  include/citygml/tesselator.h
-  include/citygml/utils.h
-  include/citygml/appearancemanager.h
-  include/citygml/polygonmanager.h
-  include/citygml/geometrymanager.h
+    SET(HEADERS
+      ${PUBLIC_HEADER}
 
-  include/parser/nodetypes.h
-  include/parser/attributes.h
-  include/parser/documentlocation.h
+      ${CMAKE_MODULE_PATH}/citygml_api.h.in
 
-  include/parser/parserutils.hpp
-  include/parser/geocoordinatetransformer.h
+      include/citygml/tesselator.h
+      include/citygml/utils.h
+      include/citygml/appearancemanager.h
+      include/citygml/polygonmanager.h
+      include/citygml/geometrymanager.h
 
-  include/parser/citygmldocumentparser.h
-  include/parser/citygmlelementparser.h
-  include/parser/elementparser.h
+      include/parser/nodetypes.h
+      include/parser/attributes.h
+      include/parser/documentlocation.h
 
-  include/parser/delayedchoiceelementparser.h
-  include/parser/unknownelementparser.h
-  include/parser/skipelementparser.h
-  include/parser/sequenceparser.h
+      include/parser/parserutils.hpp
+      include/parser/geocoordinatetransformer.h
 
-  include/parser/gmlobjectparser.h
-  include/parser/gmlfeaturecollectionparser.h
+      include/parser/citygmldocumentparser.h
+      include/parser/citygmlelementparser.h
+      include/parser/elementparser.h
 
-  include/parser/citymodelelementparser.h
-  include/parser/cityobjectelementparser.h
-  include/parser/appearanceelementparser.h
-  include/parser/externalreferenceparser.h
-  include/parser/materialelementparser.h
-  include/parser/textureelementparser.h
-  include/parser/georeferencedtextureelementparser.h
-  include/parser/geometryelementparser.h
-  include/parser/polygonelementparser.h
-  include/parser/rectifiedgridcoverageparser.h
-  include/parser/linestringelementparser.h
-  include/parser/linearringelementparser.h
-  include/parser/implicitgeometryelementparser.h
-  include/parser/addressparser.h
-  include/parser/codelisthandlerxerces.h
-)
+      include/parser/delayedchoiceelementparser.h
+      include/parser/unknownelementparser.h
+      include/parser/skipelementparser.h
+      include/parser/sequenceparser.h
+
+      include/parser/gmlobjectparser.h
+      include/parser/gmlfeaturecollectionparser.h
+
+      include/parser/citymodelelementparser.h
+      include/parser/cityobjectelementparser.h
+      include/parser/appearanceelementparser.h
+      include/parser/externalreferenceparser.h
+      include/parser/materialelementparser.h
+      include/parser/textureelementparser.h
+      include/parser/georeferencedtextureelementparser.h
+      include/parser/geometryelementparser.h
+      include/parser/polygonelementparser.h
+      include/parser/rectifiedgridcoverageparser.h
+      include/parser/linestringelementparser.h
+      include/parser/linearringelementparser.h
+      include/parser/implicitgeometryelementparser.h
+      include/parser/addressparser.h
+      include/parser/codelisthandlerxerces.h
+    )
+else()
+    SET(PUBLIC_HEADER
+      include/citygml/citygml_api.h
+      include/citygml/citygml_export.h
+      include/citygml/attributesmap.h
+      include/citygml/enum_type_bitmask.h
+      include/citygml/citygmllogger.h
+      include/citygml/polygon.h
+      include/citygml/material.h
+      include/citygml/geometry.h
+      include/citygml/object.h
+      include/citygml/featureobject.h
+      include/citygml/georeferencedtexture.h
+      include/citygml/cityobject.h
+      include/citygml/envelope.h
+      include/citygml/appearance.h
+      include/citygml/vecs.hpp
+      include/citygml/citymodel.h
+      include/citygml/linearring.h
+      include/citygml/citygml.h
+      include/citygml/transformmatrix.h
+      include/citygml/implictgeometry.h
+      include/citygml/tesselator.h
+      include/citygml/texture.h
+      include/citygml/appearancetargetdefinition.h
+      include/citygml/texturetargetdefinition.h
+      include/citygml/materialtargetdefinition.h
+      include/citygml/texturecoordinates.h
+      include/citygml/appearancetarget.h
+      #include/citygml/citygmlfactory.h
+      include/citygml/linestring.h
+      include/citygml/address.h
+      include/citygml/rectifiedgridcoverage.h
+      include/citygml/externalreference.h
+    )
+    SET(HEADERS
+      ${PUBLIC_HEADER}
+
+      ${CMAKE_MODULE_PATH}/citygml_api.h.in
+
+      include/citygml/tesselator.h
+      include/citygml/utils.h
+      include/citygml/appearancemanager.h
+      include/citygml/polygonmanager.h
+      include/citygml/geometrymanager.h
+    )
+endif()
 
 ADD_LIBRARY( ${target} ${LIBCITYGML_USER_DEFINED_DYNAMIC_OR_STATIC} ${SOURCES} ${HEADERS} )
 
