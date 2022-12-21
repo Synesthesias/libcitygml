@@ -50,70 +50,106 @@ INCLUDE_DIRECTORIES(    ${CMAKE_CURRENT_SOURCE_DIR}/include
                         ${GLU_INCLUDE_PATH}
                         ${GDAL_INCLUDE_DIR})
 
-SET(SOURCES
-  src/citygml/attributesmap.cpp
-  src/citygml/citymodel.cpp
-  src/citygml/tesselator.cpp
-  src/citygml/object.cpp
-  src/citygml/featureobject.cpp
-  src/citygml/appearance.cpp
-  src/citygml/texture.cpp
-  src/citygml/material.cpp
-  src/citygml/georeferencedtexture.cpp
-  src/citygml/envelope.cpp
-  src/citygml/appearancemanager.cpp
-  src/citygml/cityobject.cpp
-  src/citygml/geometry.cpp
-  src/citygml/implictgeometry.cpp
-  src/citygml/linearring.cpp
-  src/citygml/polygon.cpp
-  src/citygml/transformmatrix.cpp
-  src/citygml/texturetargetdefinition.cpp
-  src/citygml/materialtargetdefinition.cpp
-  src/citygml/texturecoordinates.cpp
-  src/citygml/appearancetarget.cpp
-  src/citygml/citygmlfactory.cpp
-  src/citygml/polygonmanager.cpp
-  src/citygml/geometrymanager.cpp
-  src/citygml/linestring.cpp
-  src/citygml/address.cpp
-  src/citygml/rectifiedgridcoverage.cpp
-  src/citygml/externalreference.cpp
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
+  SET(SOURCES
+    src/citygml/attributesmap.cpp
+    src/citygml/citymodel.cpp
+    src/citygml/tesselator.cpp
+    src/citygml/object.cpp
+    src/citygml/featureobject.cpp
+    src/citygml/appearance.cpp
+    src/citygml/texture.cpp
+    src/citygml/material.cpp
+    src/citygml/georeferencedtexture.cpp
+    src/citygml/envelope.cpp
+    src/citygml/appearancemanager.cpp
+    src/citygml/cityobject.cpp
+    src/citygml/geometry.cpp
+    src/citygml/implictgeometry.cpp
+    src/citygml/linearring.cpp
+    src/citygml/polygon.cpp
+    src/citygml/transformmatrix.cpp
+    src/citygml/texturetargetdefinition.cpp
+    src/citygml/materialtargetdefinition.cpp
+    src/citygml/texturecoordinates.cpp
+    src/citygml/appearancetarget.cpp
+    src/citygml/citygmlfactory.cpp
+    src/citygml/polygonmanager.cpp
+    src/citygml/geometrymanager.cpp
+    src/citygml/linestring.cpp
+    src/citygml/address.cpp
+    src/citygml/rectifiedgridcoverage.cpp
+    src/citygml/externalreference.cpp
 
-  src/parser/nodetypes.cpp
-  src/parser/attributes.cpp
+    src/parser/nodetypes.cpp
+    src/parser/attributes.cpp
 
-  src/parser/geocoordinatetransformer.cpp
+    src/parser/geocoordinatetransformer.cpp
 
-  src/parser/citygmldocumentparser.cpp
-  src/parser/parserxercesc.cpp
-  src/parser/citygmlelementparser.cpp
-  src/parser/elementparser.cpp
+    src/parser/citygmldocumentparser.cpp
+    src/parser/parserxercesc.cpp
+    src/parser/citygmlelementparser.cpp
+    src/parser/elementparser.cpp
 
-  src/parser/delayedchoiceelementparser.cpp
-  src/parser/unknownelementparser.cpp
-  src/parser/skipelementparser.cpp
-  src/parser/sequenceparser.cpp
+    src/parser/delayedchoiceelementparser.cpp
+    src/parser/unknownelementparser.cpp
+    src/parser/skipelementparser.cpp
+    src/parser/sequenceparser.cpp
 
-  src/parser/gmlobjectparser.cpp
-  src/parser/gmlfeaturecollectionparser.cpp
+    src/parser/gmlobjectparser.cpp
+    src/parser/gmlfeaturecollectionparser.cpp
 
-  src/parser/citymodelelementparser.cpp
-  src/parser/cityobjectelementparser.cpp
-  src/parser/appearanceelementparser.cpp
-  src/parser/externalreferenceparser.cpp
-  src/parser/materialelementparser.cpp
-  src/parser/textureelementparser.cpp
-  src/parser/georeferencedtextureelementparser.cpp
-  src/parser/geometryelementparser.cpp
-  src/parser/polygonelementparser.cpp
-  src/parser/rectifiedgridcoverageparser.cpp
-  src/parser/linestringelementparser.cpp
-  src/parser/linearringelementparser.cpp
-  src/parser/implicitgeometryelementparser.cpp
-  src/parser/addressparser.cpp
-  src/parser/codelisthandlerxerces.cpp
-)
+    src/parser/citymodelelementparser.cpp
+    src/parser/cityobjectelementparser.cpp
+    src/parser/appearanceelementparser.cpp
+    src/parser/externalreferenceparser.cpp
+    src/parser/materialelementparser.cpp
+    src/parser/textureelementparser.cpp
+    src/parser/georeferencedtextureelementparser.cpp
+    src/parser/geometryelementparser.cpp
+    src/parser/polygonelementparser.cpp
+    src/parser/rectifiedgridcoverageparser.cpp
+    src/parser/linestringelementparser.cpp
+    src/parser/linearringelementparser.cpp
+    src/parser/implicitgeometryelementparser.cpp
+    src/parser/addressparser.cpp
+    src/parser/codelisthandlerxerces.cpp
+  )
+else()
+  SET(SOURCES
+    src/citygml/attributesmap.cpp
+    src/citygml/citymodel.cpp
+    src/citygml/tesselator.cpp
+    src/citygml/object.cpp
+    src/citygml/featureobject.cpp
+    src/citygml/appearance.cpp
+    src/citygml/texture.cpp
+    src/citygml/material.cpp
+    src/citygml/georeferencedtexture.cpp
+    src/citygml/envelope.cpp
+    src/citygml/appearancemanager.cpp
+    src/citygml/cityobject.cpp
+    src/citygml/geometry.cpp
+    src/citygml/implictgeometry.cpp
+    src/citygml/linearring.cpp
+    src/citygml/polygon.cpp
+    src/citygml/transformmatrix.cpp
+    src/citygml/texturetargetdefinition.cpp
+    src/citygml/materialtargetdefinition.cpp
+    src/citygml/texturecoordinates.cpp
+    src/citygml/appearancetarget.cpp
+    src/citygml/citygmlfactory.cpp
+    src/citygml/polygonmanager.cpp
+    src/citygml/geometrymanager.cpp
+    src/citygml/linestring.cpp
+    src/citygml/address.cpp
+    src/citygml/rectifiedgridcoverage.cpp
+    src/citygml/externalreference.cpp
+
+    src/parser/parserxercesc_dummy.cpp
+  )
+endif()
+
 if(UNIX)
   if (APPLE)
     set_source_files_properties(src/citygml/tesselator.cpp PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations") # for warnings: 'glu*' is deprecated...
@@ -209,7 +245,10 @@ generate_export_header(citygml
                        EXPORT_MACRO_NAME LIBCITYGML_EXPORT
                        EXPORT_FILE_NAME ${EXPORT_HEADER_FILE_NAME})
 
-TARGET_LINK_LIBRARIES( ${target} PUBLIC ${XERCESC_LIBRARIES} ${OPENGL_LIBRARIES} )
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
+  TARGET_LINK_LIBRARIES( ${target} PUBLIC ${XERCESC_LIBRARIES} ${OPENGL_LIBRARIES} )
+endif()
+
 if(LIBCITYGML_USE_GDAL)
     TARGET_LINK_LIBRARIES( ${target} PUBLIC ${GDAL_LIBRARY} )
 endif(LIBCITYGML_USE_GDAL)
@@ -288,7 +327,11 @@ else()
     set(LIBCITYGML_POSTFIX "")
 endif()
 
-set(PKG_CONFIG_REQUIRES "xerces-c glu")
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
+  set(PKG_CONFIG_REQUIRES "xerces-c glu")
+else()
+  set(PKG_CONFIG_REQUIRES "glu")
+endif()
 
 if (LIBCITYGML_USE_GDAL)
     set(PKG_CONFIG_REQUIRES "${PKG_CONFIG_REQUIRES} gdal")
