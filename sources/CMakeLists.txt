@@ -6,8 +6,8 @@ ENDIF (NOT DEFINED CMAKE_MODULE_PATH)
 
 SET( target citygml )
 
-FIND_PACKAGE( OpenGL REQUIRED )
-if(NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")  
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
+  FIND_PACKAGE( OpenGL REQUIRED )
   FIND_PACKAGE( Xerces REQUIRED )
 endif()
 
@@ -121,7 +121,7 @@ else()
   SET(SOURCES
     src/citygml/attributesmap.cpp
     src/citygml/citymodel.cpp
-    src/citygml/tesselator.cpp
+    src/citygml/tesselator_dummy.cpp
     src/citygml/object.cpp
     src/citygml/featureobject.cpp
     src/citygml/appearance.cpp
@@ -134,7 +134,7 @@ else()
     src/citygml/geometry.cpp
     src/citygml/implictgeometry.cpp
     src/citygml/linearring.cpp
-    src/citygml/polygon.cpp
+    src/citygml/polygon_dummy.cpp
     src/citygml/transformmatrix.cpp
     src/citygml/texturetargetdefinition.cpp
     src/citygml/materialtargetdefinition.cpp
@@ -249,7 +249,7 @@ else()
       include/citygml/attributesmap.h
       include/citygml/enum_type_bitmask.h
       include/citygml/citygmllogger.h
-      include/citygml/polygon.h
+      include/citygml/polygon_dummy.h
       include/citygml/material.h
       include/citygml/geometry.h
       include/citygml/object.h
@@ -264,7 +264,7 @@ else()
       include/citygml/citygml.h
       include/citygml/transformmatrix.h
       include/citygml/implictgeometry.h
-      include/citygml/tesselator.h
+      include/citygml/tesselator_dummy.h
       include/citygml/texture.h
       include/citygml/appearancetargetdefinition.h
       include/citygml/texturetargetdefinition.h
@@ -282,7 +282,7 @@ else()
 
       ${CMAKE_MODULE_PATH}/citygml_api.h.in
 
-      include/citygml/tesselator.h
+      include/citygml/tesselator_dummy.h
       include/citygml/utils.h
       include/citygml/appearancemanager.h
       include/citygml/polygonmanager.h
@@ -299,8 +299,6 @@ generate_export_header(citygml
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
   TARGET_LINK_LIBRARIES( ${target} PUBLIC ${XERCESC_LIBRARIES} ${OPENGL_LIBRARIES} )
-else()
-  TARGET_LINK_LIBRARIES( ${target} PUBLIC ${OPENGL_LIBRARIES} )
 endif()
 
 if(LIBCITYGML_USE_GDAL)
