@@ -337,7 +337,8 @@ namespace citygml {
             parseGeometryForLod0FootPrintNode();
         } else if (node == NodeType::GEN_Lod0TerrainIntersectionNode
                    || node == NodeType::WTR_Lod0MultiCurveNode
-                   || node == NodeType::WTR_Lod0MultiSurfaceNode) {
+                   || node == NodeType::WTR_Lod0MultiSurfaceNode 
+                   || node == NodeType::GEN_Lod0GeometryNode) {
             
             parseGeometryPropertyElementForLODLevel(0, attributes.getCityGMLIDAttribute());
         } else if (node == NodeType::BLDG_Lod1MultiCurveNode
@@ -350,7 +351,10 @@ namespace citygml {
                    || node == NodeType::TRANS_Lod1MultiSurfaceNode
                    || node == NodeType::WTR_Lod1MultiCurveNode
                    || node == NodeType::WTR_Lod1MultiSurfaceNode
-                   || node == NodeType::WTR_Lod1SolidNode) {
+                   || node == NodeType::WTR_Lod1SolidNode 
+                   || node == NodeType::GEN_Lod1GeometryNode
+                   || node == NodeType::FRN_Lod1GeometryNode
+                   || node == NodeType::VEG_Lod1GeometryNode) {
 
             parseGeometryPropertyElementForLODLevel(1, attributes.getCityGMLIDAttribute());
         } else if (node == NodeType::BLDG_Lod2MultiCurveNode
@@ -362,7 +366,11 @@ namespace citygml {
                    || node == NodeType::LUSE_Lod2MultiSurfaceNode
                    || node == NodeType::TRANS_Lod2MultiSurfaceNode
                    || node == NodeType::WTR_Lod2SolidNode
-                   || node == NodeType::WTR_Lod2SurfaceNode) {
+                   || node == NodeType::WTR_Lod2SurfaceNode 
+                   || node == NodeType::GEN_Lod2GeometryNode
+                   || node == NodeType::FRN_Lod2GeometryNode
+                   || node == NodeType::BLDG_Lod2GeometryNode
+                   || node == NodeType::VEG_Lod2GeometryNode) {
 
             parseGeometryPropertyElementForLODLevel(2, attributes.getCityGMLIDAttribute());
         } else if (node == NodeType::BLDG_Lod3MultiCurveNode
@@ -374,7 +382,11 @@ namespace citygml {
                    || node == NodeType::LUSE_Lod3MultiSurfaceNode
                    || node == NodeType::TRANS_Lod3MultiSurfaceNode
                    || node == NodeType::WTR_Lod3SolidNode
-                   || node == NodeType::WTR_Lod3SurfaceNode) {
+                   || node == NodeType::WTR_Lod3SurfaceNode 
+                   || node == NodeType::GEN_Lod3GeometryNode
+                   || node == NodeType::FRN_Lod3GeometryNode
+                   || node == NodeType::BLDG_Lod3GeometryNode
+                   || node == NodeType::VEG_Lod3GeometryNode) {
 
             parseGeometryPropertyElementForLODLevel(3, attributes.getCityGMLIDAttribute());
         } else if (node == NodeType::BLDG_Lod4MultiCurveNode
@@ -386,30 +398,12 @@ namespace citygml {
                    || node == NodeType::LUSE_Lod4MultiSurfaceNode
                    || node == NodeType::TRANS_Lod4MultiSurfaceNode
                    || node == NodeType::WTR_Lod4SolidNode
-                   || node == NodeType::WTR_Lod4SurfaceNode) {
-
-            parseGeometryPropertyElementForLODLevel(4, attributes.getCityGMLIDAttribute());
-        } else if (node == NodeType::GEN_Lod0GeometryNode) {
-            parseGeometryPropertyElementForLODLevel(0, attributes.getCityGMLIDAttribute());
-        }
-        else if (node == NodeType::GEN_Lod1GeometryNode
-                   || node == NodeType::FRN_Lod1GeometryNode
-                   || node == NodeType::VEG_Lod1GeometryNode) {
-            parseGeometryPropertyElementForLODLevel(1, attributes.getCityGMLIDAttribute());
-        } else if (node == NodeType::GEN_Lod2GeometryNode
-                   || node == NodeType::FRN_Lod2GeometryNode
-                   || node == NodeType::BLDG_Lod2GeometryNode
-                   || node == NodeType::VEG_Lod2GeometryNode) {
-            parseGeometryPropertyElementForLODLevel(2, attributes.getCityGMLIDAttribute());
-        } else if (node == NodeType::GEN_Lod3GeometryNode
-                   || node == NodeType::FRN_Lod3GeometryNode
-                   || node == NodeType::BLDG_Lod3GeometryNode
-                   || node == NodeType::VEG_Lod3GeometryNode) {
-            parseGeometryPropertyElementForLODLevel(3, attributes.getCityGMLIDAttribute());
-        } else if (node == NodeType::GEN_Lod4GeometryNode
+                   || node == NodeType::WTR_Lod4SurfaceNode 
+                   || node == NodeType::GEN_Lod4GeometryNode
                    || node == NodeType::FRN_Lod4GeometryNode
                    || node == NodeType::BLDG_Lod4GeometryNode
                    || node == NodeType::VEG_Lod4GeometryNode) {
+
             parseGeometryPropertyElementForLODLevel(4, attributes.getCityGMLIDAttribute());
         } else if (node == NodeType::GEN_Lod0ImplicitRepresentationNode) {
           
