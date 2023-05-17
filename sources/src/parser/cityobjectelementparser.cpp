@@ -101,7 +101,10 @@ namespace citygml {
                 typeIDTypeMap.insert(HANDLE_TYPE(BLDG, CeilingSurface));
                 typeIDTypeMap.insert(HANDLE_TYPE(BLDG, OuterCeilingSurface));
                 typeIDTypeMap.insert(HANDLE_TYPE(BLDG, OuterFloorSurface));
-                typeIDTypeMap.insert(HANDLE_TYPE(GRP, CityObjectGroup));
+
+            //    typeIDTypeMap.insert(HANDLE_TYPE(GRP, CityObjectGroup));
+                typeIDTypeMap.insert(HANDLE_GROUP_TYPE(GRP, CityObjectGroup, CityObject::CityObjectsType::COT_CityObjectGroup));
+
                 typeIDTypeMap.insert(HANDLE_TYPE(DEM, ReliefFeature));
                 typeIDTypeMap.insert(HANDLE_TYPE(DEM, ReliefComponent));
                 typeIDTypeMap.insert(HANDLE_TYPE(DEM, TINRelief));
@@ -295,6 +298,16 @@ namespace citygml {
             setParserForNextElement(new RectifiedGridCoverageParser(m_documentParser, m_factory, m_logger, [this](RectifiedGridCoverage * rectifiedGridCoverage) {
                 m_model->setRectifiedGridCoverage(rectifiedGridCoverage);
             }));
+
+        } else if (node == NodeType::GRP_GroupMemberNode
+                   || node == NodeType::GRP_ParentNode) {
+
+            if (!attributes.hasXLinkAttribute()) {
+                setParserForNextElement(new CityObjectElementParser(m_documentParser, m_factory, m_logger, m_parserParams, [this](CityObject* obj) {
+                    m_model->addChildCityObject(obj);
+                    }));
+            }
+
         } else if (node == NodeType::BLDG_BoundedByNode
                    || node == NodeType::BLDG_OuterBuildingInstallationNode
                    || node == NodeType::BLDG_InteriorBuildingInstallationNode
@@ -303,8 +316,8 @@ namespace citygml {
                    || node == NodeType::BLDG_InteriorRoomNode
                    || node == NodeType::BLDG_OpeningNode
                    || node == NodeType::BLDG_ConsistsOfBuildingPartNode
-                   || node == NodeType::GRP_GroupMemberNode
-                   || node == NodeType::GRP_ParentNode
+               //    || node == NodeType::GRP_GroupMemberNode
+               //    || node == NodeType::GRP_ParentNode
                    || node == NodeType::TRANS_TrafficAreaNode
                    || node == NodeType::TRANS_AuxiliaryTrafficAreaNode
                    || node == NodeType::WTR_BoundedByNode
