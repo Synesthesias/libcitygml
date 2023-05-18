@@ -80,7 +80,9 @@ namespace citygml {
         auto it = map.find(theme);
 
         if (it == map.end()) {
-            return std::vector<TVec2f>();
+            if (map.empty())
+                return std::vector<TVec2f>();
+            it = map.begin();
         }
 
         if (it->second.size() != m_vertices.size()) {
