@@ -61,9 +61,7 @@ namespace citygml {
         auto& map = front ? m_themeMatMapFront : m_themeMatMapBack;
         auto it = map.find(theme);
         if (it == map.end()) {
-            if (map.empty())
-                return nullptr;
-            return map.begin()->second;
+            return nullptr;
         }
         return it->second;
     }
@@ -73,9 +71,7 @@ namespace citygml {
         auto& map = front ? m_themeMatMapFront : m_themeMatMapBack;
         const auto it = map.find(theme);
         if (it == map.end()) {
-            if (map.empty())
-                return nullptr;
-            return map.begin()->second;
+            return nullptr;
         }
         return it->second;
     }
@@ -85,9 +81,7 @@ namespace citygml {
         auto& map = front ? m_themeTexMapFront : m_themeTexMapBack;
         auto it = map.find(theme);
         if (it == map.end()) {
-            if (map.empty())
-                return nullptr;
-            return map.begin()->second;
+            return nullptr;
         }
         return it->second;
     }
@@ -97,9 +91,7 @@ namespace citygml {
         auto& map = front ? m_themeTexMapFront : m_themeTexMapBack;
         const auto it = map.find(theme);
         if (it == map.end()) {
-            if(map.empty())
-                return nullptr;
-            return map.begin()->second;
+            return nullptr;
         }
         return it->second;
     }
