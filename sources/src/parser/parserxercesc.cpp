@@ -285,6 +285,7 @@ namespace citygml
         parser->setFeature(xercesc::XMLUni::fgSAX2CoreNameSpaces, false);
         parser->setContentHandler( &handler );
         parser->setErrorHandler( &handler );
+        parser->setInputBufferSize(2048 * 1024);
 
 #ifdef NDEBUG
         try
