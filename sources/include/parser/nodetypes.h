@@ -121,6 +121,7 @@ namespace citygml {
         NODETYPE( GML, UpperCorner )
         NODETYPE( GML, Solid )
         NODETYPE( GML, SurfaceMember )
+        NODETYPE( GML, CurveMember)
         NODETYPE( GML, BaseSurface )
         NODETYPE( GML, Patches )
         NODETYPE( GML, TrianglePatches )
@@ -402,6 +403,8 @@ namespace citygml {
         NODETYPE( URO, Key )
         NODETYPE( URO, CodeValue )
 
+        NODETYPE(URO, Lod2Network)
+        NODETYPE(URO, Lod3Network)
     private:
         static void initializeNodeTypes();
 
