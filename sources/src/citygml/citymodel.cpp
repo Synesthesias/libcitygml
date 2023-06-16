@@ -117,7 +117,7 @@ namespace citygml
     const ConstCityObjects CityModel::getRootCityObjects() const
     {
         ConstCityObjects list;
-        for (const std::unique_ptr<CityObject>& cityObj : m_roots) {
+        for (const std::shared_ptr<CityObject>& cityObj : m_roots) {
             list.push_back(cityObj.get());
         }
         return list;
@@ -157,7 +157,7 @@ namespace citygml
         }
 
         // Build city objects map
-        for (std::unique_ptr<CityObject>& obj : m_roots) {
+        for (std::shared_ptr<CityObject>& obj : m_roots) {
             addToCityObjectsMapRecursive(obj.get());
         }
 

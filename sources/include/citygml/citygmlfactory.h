@@ -13,6 +13,7 @@ namespace citygml {
     class AppearanceManager;
     class PolygonManager;
     class GeometryManager;
+    class GroupManager;
     class CityGMLLogger;
 
     class CityModel;
@@ -56,6 +57,9 @@ namespace citygml {
         std::shared_ptr<Geometry> shareGeometry(Geometry* geom);
         void requestSharedGeometryWithID(ImplicitGeometry* implicitGeom, const std::string& id);
 
+        std::shared_ptr<CityObject> shareGroupMember(CityObject* cityobject);
+        void requestSharedGroupMember(CityObject* cityobject, const std::string& id);
+
         std::shared_ptr<Texture> createTexture(const std::string& id);
         std::shared_ptr<Material> createMaterial(const std::string& id);
         std::shared_ptr<GeoreferencedTexture> createGeoReferencedTexture(const std::string& id);
@@ -78,7 +82,8 @@ namespace citygml {
         std::unique_ptr<AppearanceManager> m_appearanceManager;
         std::unique_ptr<PolygonManager> m_polygonManager;
         std::unique_ptr<GeometryManager> m_geometryManager;
-
+        std::unique_ptr<GroupManager> m_groupManager;
+        
         std::shared_ptr<CodeLists> m_codeLists;
     };
 

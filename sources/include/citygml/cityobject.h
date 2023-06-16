@@ -132,7 +132,7 @@ namespace citygml {
 
         std::vector<std::unique_ptr<Geometry> > m_geometries;
         std::vector<std::unique_ptr<ImplicitGeometry> > m_implicitGeometries;
-        std::vector<std::unique_ptr<CityObject> > m_children;
+        std::vector<std::shared_ptr<CityObject> > m_children;
         std::unique_ptr<Address> m_address;
         std::unique_ptr<RectifiedGridCoverage> m_rectifiedGridCoverage;
         std::unique_ptr<ExternalReference> m_externalReference;

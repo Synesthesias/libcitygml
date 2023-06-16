@@ -254,7 +254,7 @@ namespace citygml {
         
     }
 
-    bool CityObjectElementParser::parseElementEndTag(const NodeType::XMLNode&, const std::string&)
+    bool CityObjectElementParser::parseElementEndTag(const NodeType::XMLNode& node, const std::string&)
     {
         if (getSourceSRSOverride()) {
             Envelope *envelope = new Envelope(getEnvelope().srsName());
@@ -262,6 +262,14 @@ namespace citygml {
             envelope->setUpperBound(m_model->getEnvelope().getUpperBound());
             m_model->setEnvelope(envelope);
         }
+
+        //if (m_model->getType() == citygml::CityObject::CityObjectsType::COT_Room)             {
+        if( node == NodeType::BLDG_RoomNode ){
+            CITYGML_LOG_INFO(m_logger, "BLDG_RoomNode <" << m_model->getId()  << ">  at " << getDocumentLocation() << " ");
+
+            m_factory.shareGroupMember(m_model);
+        }
+
         m_callback(m_model);
         m_model = nullptr;
         return true;
@@ -296,6 +304,23 @@ namespace citygml {
                 m_model->setRectifiedGridCoverage(rectifiedGridCoverage);
             }));
 
+        } else if (node == NodeType::GRP_GroupMemberNode ) {
+            
+            if (attributes.hasXLinkAttribute()) {
+                CITYGML_LOG_INFO(m_logger, "GRP_GroupMemberNode <" << attributes.getXLinkValue() << ">  at " << getDocumentLocation() << " ");
+
+                m_factory.requestSharedGroupMember(m_model, attributes.getXLinkValue());
+            }
+
+        } else if (node == NodeType::GRP_ParentNode) {
+
+            if (attributes.hasXLinkAttribute()) {
+                CITYGML_LOG_INFO(m_logger, "GRP_ParentNode <" << attributes.getXLinkValue() << ">  at " << getDocumentLocation() << " ");
+
+                m_model->setAttribute( "parent" , attributes.getXLinkValue(), getAttributeType(node));
+            }
+
+        /*
         } else if (node == NodeType::GRP_GroupMemberNode
                    || node == NodeType::GRP_ParentNode) {
 
@@ -307,7 +332,7 @@ namespace citygml {
                     m_model->addChildCityObject(obj);
                     }));
             }
-
+        */
         } else if (node == NodeType::BLDG_BoundedByNode
                    || node == NodeType::BLDG_OuterBuildingInstallationNode
                    || node == NodeType::BLDG_InteriorBuildingInstallationNode
