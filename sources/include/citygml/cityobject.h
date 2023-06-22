@@ -109,7 +109,7 @@ namespace citygml {
         const CityObject& getChildCityObject( unsigned int i ) const;
         CityObject& getChildCityObject( unsigned int i );
 
-        void addChildCityObject(CityObject* cityObj);
+        void addChildCityObject(std::shared_ptr<CityObject> cityObj);
 
         // Access address
         const Address* address() const;

@@ -13,11 +13,10 @@ namespace citygml {
         if (m_sharedCityobjects.count(cityobject->getId()) > 0) {
             CITYGML_LOG_WARN(m_logger, "Duplicate definition of shared cityobject with id '" << cityobject->getId() << "'... overwriting existing object.");
         }
-
         m_sharedCityobjects[cityobject->getId()] = cityobject;
     }
 
-    void GroupManager::requestSharedGroupMember(CityObject* cityobject, const std::string& cityobjectID) {
+    void GroupManager::requestSharedGroupMember(std::shared_ptr<CityObject> cityobject, const std::string& cityobjectID) {
         m_groupRequests.push_back(GroupRequest(cityobject, cityobjectID));
     }
 
@@ -31,8 +30,7 @@ namespace citygml {
                                  << "shared cityobject object exists.");
                 continue;
             }
-
-            request.target->addChildCityObject(it->second.get());
+            request.target->addChildCityObject(it->second);
         }
 
         m_sharedCityobjects.clear();

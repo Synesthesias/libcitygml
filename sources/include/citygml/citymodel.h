@@ -30,7 +30,7 @@ namespace citygml {
         * @brief Return the roots elements of the model.
         */
         const ConstCityObjects getRootCityObjects() const;
-        void addRootObject(CityObject* obj);
+        void addRootObject(std::shared_ptr<CityObject> obj);
 
         unsigned int getNumRootCityObjects() const;
         CityObject& getRootCityObject(int i);

@@ -123,9 +123,9 @@ namespace citygml
         return list;
     }
 
-    void CityModel::addRootObject(CityObject* obj)
+    void CityModel::addRootObject(std::shared_ptr<CityObject> obj)
     {
-        m_roots.push_back(std::unique_ptr<CityObject>(obj));
+        m_roots.push_back(obj);
     }
 
     unsigned int CityModel::getNumRootCityObjects() const

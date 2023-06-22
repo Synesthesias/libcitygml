@@ -40,9 +40,9 @@ namespace citygml {
         return new CityModel(id);
     }
 
-    CityObject* CityGMLFactory::createCityObject(const std::string& id, CityObject::CityObjectsType type)
+    std::shared_ptr<CityObject> CityGMLFactory::createCityObject(const std::string& id, CityObject::CityObjectsType type)
     {
-        CityObject* cityObject = new CityObject(id, type);
+        std::shared_ptr<CityObject> cityObject = std::make_shared<CityObject>(id, type);
         return cityObject;
     }
 
@@ -128,15 +128,14 @@ namespace citygml {
         m_geometryManager->requestSharedGeometryForImplicitGeometry(implicitGeom, id);
     }
 
-
-    std::shared_ptr<CityObject> CityGMLFactory::shareGroupMember(CityObject* cityobject)
+    std::shared_ptr<CityObject> CityGMLFactory::shareGroupMember(std::shared_ptr<CityObject> cityobject)
     {
         std::shared_ptr<CityObject> shared = std::shared_ptr<CityObject>(cityobject);
         m_groupManager->addSharedGroupMember(shared);
         return shared;
     }
 
-    void CityGMLFactory::requestSharedGroupMember(CityObject* cityobject, const std::string& id)
+    void CityGMLFactory::requestSharedGroupMember(std::shared_ptr<CityObject> cityobject, const std::string& id)
     {
         m_groupManager->requestSharedGroupMember(cityobject, id);
     }

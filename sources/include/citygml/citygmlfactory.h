@@ -38,7 +38,8 @@ namespace citygml {
         CityGMLFactory(std::shared_ptr<CityGMLLogger> logger);
 
         CityModel* createCityModel(const std::string& id);
-        CityObject* createCityObject(const std::string& id, CityObject::CityObjectsType type);
+        std::shared_ptr<CityObject> createCityObject(const std::string& id, CityObject::CityObjectsType type);
+
         Geometry* createGeometry(const std::string& id, const CityObject::CityObjectsType& cityObjType = CityObject::CityObjectsType::COT_All, unsigned int lod = 0, std::string srsName = "");
         RectifiedGridCoverage* createRectifiedGridCoverage(std::string const& id);
 
@@ -57,8 +58,8 @@ namespace citygml {
         std::shared_ptr<Geometry> shareGeometry(Geometry* geom);
         void requestSharedGeometryWithID(ImplicitGeometry* implicitGeom, const std::string& id);
 
-        std::shared_ptr<CityObject> shareGroupMember(CityObject* cityobject);
-        void requestSharedGroupMember(CityObject* cityobject, const std::string& id);
+        std::shared_ptr<CityObject> shareGroupMember(std::shared_ptr<CityObject> cityobject);
+        void requestSharedGroupMember(std::shared_ptr<CityObject> cityobject, const std::string& id);
 
         std::shared_ptr<Texture> createTexture(const std::string& id);
         std::shared_ptr<Material> createMaterial(const std::string& id);

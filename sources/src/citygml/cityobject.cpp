@@ -83,11 +83,10 @@ namespace citygml {
         return *m_children[i];
     }
 
-    void CityObject::addChildCityObject(CityObject* cityObj)
-    {
-        m_children.push_back(std::shared_ptr<CityObject>(cityObj));
+    void CityObject::addChildCityObject(std::shared_ptr<CityObject> cityObj) {
+        m_children.push_back(cityObj);
     }
-
+    
     const Address* CityObject::address() const
     {
         return m_address.get();

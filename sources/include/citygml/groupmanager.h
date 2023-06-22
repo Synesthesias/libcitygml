@@ -15,18 +15,16 @@ namespace citygml {
     class LIBCITYGML_EXPORT GroupManager {
     public:
         GroupManager(std::shared_ptr<CityGMLLogger> logger);
-
         void addSharedGroupMember(std::shared_ptr<CityObject> cityobject);
-        void requestSharedGroupMember(CityObject* cityobject, const std::string& cityobjectID);
-
+        void requestSharedGroupMember(std::shared_ptr<CityObject> cityobject, const std::string& cityobjectID);
         void finish();
 
         ~GroupManager();
     private:
         struct GroupRequest {
-            GroupRequest(CityObject* target, std::string cityobjectID) : target(target), cityobjectID(cityobjectID) {
+            GroupRequest(std::shared_ptr<CityObject> target, std::string cityobjectID) : target(target), cityobjectID(cityobjectID) {
             }
-            CityObject* target;
+            std::shared_ptr<CityObject> target;
             std::string cityobjectID;
         };
 
