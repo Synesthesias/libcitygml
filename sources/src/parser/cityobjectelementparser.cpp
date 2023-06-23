@@ -263,10 +263,6 @@ namespace citygml {
             m_model->setEnvelope(envelope);
         }
 
-        if( node == NodeType::BLDG_RoomNode ){
-            m_factory.shareGroupMember(m_model);
-        }
-
         m_callback(m_model);
         m_model = nullptr;
         return true;

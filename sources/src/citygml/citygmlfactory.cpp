@@ -43,6 +43,7 @@ namespace citygml {
     std::shared_ptr<CityObject> CityGMLFactory::createCityObject(const std::string& id, CityObject::CityObjectsType type)
     {
         std::shared_ptr<CityObject> cityObject = std::make_shared<CityObject>(id, type);
+        shareGroupMember(cityObject);
         return cityObject;
     }
 
