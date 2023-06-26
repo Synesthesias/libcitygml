@@ -83,9 +83,8 @@ namespace citygml {
         return *m_children[i];
     }
 
-    void CityObject::addChildCityObject(CityObject* cityObj)
-    {
-        m_children.push_back(std::unique_ptr<CityObject>(cityObj));
+    void CityObject::addChildCityObject(std::shared_ptr<CityObject> cityObj) {
+        m_children.push_back(cityObj);
     }
 
     const Address* CityObject::address() const
@@ -126,7 +125,7 @@ namespace citygml {
             }
         }
 
-        for (std::unique_ptr<CityObject>& child : m_children) {
+        for (std::shared_ptr<CityObject>& child : m_children) {
             child->finish(tesselator, optimize, tesselate, logger);
         }
     }

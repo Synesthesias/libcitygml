@@ -3,6 +3,7 @@
 #include <citygml/appearancemanager.h>
 #include <citygml/polygonmanager.h>
 #include <citygml/geometrymanager.h>
+#include <citygml/groupmanager.h>
 #include <citygml/appearancetarget.h>
 #include <citygml/polygon.h>
 #include <citygml/linestring.h>
@@ -25,6 +26,7 @@ namespace citygml {
         m_appearanceManager = std::unique_ptr<AppearanceManager>(new AppearanceManager(logger));
         m_polygonManager = std::unique_ptr<PolygonManager>(new PolygonManager(logger));
         m_geometryManager = std::unique_ptr<GeometryManager>(new GeometryManager(logger));
+        m_groupManager = std::unique_ptr<GroupManager>(new GroupManager(logger));
         m_logger = logger;
         m_codeLists = std::shared_ptr<CodeLists>(new CodeLists);
     }
@@ -38,9 +40,10 @@ namespace citygml {
         return new CityModel(id);
     }
 
-    CityObject* CityGMLFactory::createCityObject(const std::string& id, CityObject::CityObjectsType type)
+    std::shared_ptr<CityObject> CityGMLFactory::createCityObject(const std::string& id, CityObject::CityObjectsType type)
     {
-        CityObject* cityObject = new CityObject(id, type);
+        std::shared_ptr<CityObject> cityObject = std::make_shared<CityObject>(id, type);
+        shareGroupMember(cityObject);
         return cityObject;
     }
 
@@ -126,6 +129,18 @@ namespace citygml {
         m_geometryManager->requestSharedGeometryForImplicitGeometry(implicitGeom, id);
     }
 
+    std::shared_ptr<CityObject> CityGMLFactory::shareGroupMember(std::shared_ptr<CityObject> cityobject)
+    {
+        std::shared_ptr<CityObject> shared = std::shared_ptr<CityObject>(cityobject);
+        m_groupManager->addSharedGroupMember(shared);
+        return shared;
+    }
+
+    void CityGMLFactory::requestSharedGroupMember(std::shared_ptr<CityObject> cityobject, const std::string& id)
+    {
+        m_groupManager->requestSharedGroupMember(cityobject, id);
+    }
+
     std::shared_ptr<Texture> CityGMLFactory::createTexture(const std::string& id)
     {
         std::shared_ptr<Texture> tex = std::shared_ptr<Texture>(new Texture(id));
@@ -175,6 +190,7 @@ namespace citygml {
     {
         m_polygonManager->finish();
         m_geometryManager->finish();
+        m_groupManager->finish();
         m_appearanceManager->assignAppearancesToTargets();
     }
 

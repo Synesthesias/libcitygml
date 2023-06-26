@@ -39,7 +39,7 @@ namespace citygml {
     #define HANDLE_GROUP_TYPE( prefix, elementName, enumtype ) std::pair<int, CityObject::CityObjectsType>(NodeType::prefix ## _ ## elementName ## Node.typeID(), enumtype)
     #define HANDLE_ATTR( prefix, elementName ) NodeType::prefix ## _ ## elementName ## Node.typeID()
 
-    CityObjectElementParser::CityObjectElementParser(CityGMLDocumentParser& documentParser, CityGMLFactory& factory, std::shared_ptr<CityGMLLogger> logger, const ParserParams& parserParams, std::function<void (CityObject*)> callback)
+    CityObjectElementParser::CityObjectElementParser(CityGMLDocumentParser& documentParser, CityGMLFactory& factory, std::shared_ptr<CityGMLLogger> logger, const ParserParams& parserParams, std::function<void(std::shared_ptr<CityObject>)> callback)
         : GMLFeatureCollectionElementParser(documentParser, factory, logger)
         , m_lastAttributeType(AttributeType::String)
         , m_genericAttributeSet(nullptr)
@@ -254,7 +254,7 @@ namespace citygml {
         
     }
 
-    bool CityObjectElementParser::parseElementEndTag(const NodeType::XMLNode&, const std::string&)
+    bool CityObjectElementParser::parseElementEndTag(const NodeType::XMLNode& node, const std::string&)
     {
         if (getSourceSRSOverride()) {
             Envelope *envelope = new Envelope(getEnvelope().srsName());
@@ -262,6 +262,7 @@ namespace citygml {
             envelope->setUpperBound(m_model->getEnvelope().getUpperBound());
             m_model->setEnvelope(envelope);
         }
+
         m_callback(m_model);
         m_model = nullptr;
         return true;
@@ -296,18 +297,14 @@ namespace citygml {
                 m_model->setRectifiedGridCoverage(rectifiedGridCoverage);
             }));
 
-        } else if (node == NodeType::GRP_GroupMemberNode
-                   || node == NodeType::GRP_ParentNode) {
-
+        } else if (node == NodeType::GRP_GroupMemberNode) {           
             if (attributes.hasXLinkAttribute()) {
-                CITYGML_LOG_INFO(m_logger, "Skipping CityObject child element with xlink <" << node << ">  at " << getDocumentLocation() << " (Currently not supported!)");
-                setParserForNextElement(new SkipElementParser(m_documentParser, m_logger, node));
-            } else {
-                setParserForNextElement(new CityObjectElementParser(m_documentParser, m_factory, m_logger, m_parserParams, [this](CityObject* obj) {
-                    m_model->addChildCityObject(obj);
-                    }));
+                m_factory.requestSharedGroupMember(m_model, attributes.getXLinkValue());
             }
-
+        } else if (node == NodeType::GRP_ParentNode) {
+            if (attributes.hasXLinkAttribute()) {
+                m_model->setAttribute("parent" , attributes.getXLinkValue(), getAttributeType(node));
+            }
         } else if (node == NodeType::BLDG_BoundedByNode
                    || node == NodeType::BLDG_OuterBuildingInstallationNode
                    || node == NodeType::BLDG_InteriorBuildingInstallationNode
@@ -326,7 +323,7 @@ namespace citygml {
                    || node == NodeType::DEM_RasterReliefNode
                    || node == NodeType::DEM_GridNode
                    || node == NodeType::CORE_GeneralizesToNode) {
-            setParserForNextElement(new CityObjectElementParser(m_documentParser, m_factory, m_logger, m_parserParams, [this](CityObject* obj) {
+            setParserForNextElement(new CityObjectElementParser(m_documentParser, m_factory, m_logger, m_parserParams, [this](std::shared_ptr<CityObject> obj) {
                                         m_model->addChildCityObject(obj);
                                     }));
         } else if (node == NodeType::APP_AppearanceNode // Compatibility with CityGML 1.0 (in CityGML 2 CityObjects can only contain appearanceMember elements)
@@ -471,7 +468,7 @@ namespace citygml {
             } else {
                 UnknownElementParser* dcep = new UnknownElementParser(m_documentParser, m_logger, {
                     MakeGeometryElementParser(2, m_model->getType()),
-                    new CityObjectElementParser(m_documentParser, m_factory, m_logger, m_parserParams, [this](CityObject* obj) { m_model->addChildCityObject(obj); }),
+                    new CityObjectElementParser(m_documentParser, m_factory, m_logger, m_parserParams, [this](std::shared_ptr<CityObject> obj) { m_model->addChildCityObject(obj); }),
                     this
                     });
                 dcep->setStockNode(node);
@@ -652,7 +649,7 @@ namespace citygml {
 
     FeatureObject* CityObjectElementParser::getFeatureObject()
     {
-        return m_model;
+        return m_model.get();
     }
 
     void CityObjectElementParser::parseGeometryForLODLevel(int lod)

@@ -68,6 +68,7 @@ namespace citygml {
             m_model->setEnvelope(envelope);
         }
         m_callback(m_model);
+
         return true;
     }
 
@@ -79,7 +80,7 @@ namespace citygml {
         }
 
         if (node == NodeType::CORE_CityObjectMemberNode) {
-            setParserForNextElement(new CityObjectElementParser(m_documentParser, m_factory, m_logger, m_parserParams, [this](CityObject* obj) {
+            setParserForNextElement(new CityObjectElementParser(m_documentParser, m_factory, m_logger, m_parserParams, [this](std::shared_ptr<CityObject> obj) {
                                         this->m_model->addRootObject(obj);
                                     }));
             return true;

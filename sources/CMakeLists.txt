@@ -78,6 +78,7 @@ if( NOT(IOS OR ANDROID) )
     src/citygml/citygmlfactory.cpp
     src/citygml/polygonmanager.cpp
     src/citygml/geometrymanager.cpp
+    src/citygml/groupmanager.cpp
     src/citygml/linestring.cpp
     src/citygml/address.cpp
     src/citygml/rectifiedgridcoverage.cpp
@@ -143,6 +144,7 @@ else()
     #src/citygml/citygmlfactory.cpp
     src/citygml/polygonmanager.cpp
     src/citygml/geometrymanager.cpp
+    src/citygml/groupmanager.cpp
     src/citygml/linestring.cpp
     src/citygml/address.cpp
     src/citygml/rectifiedgridcoverage.cpp
@@ -206,6 +208,7 @@ if( NOT(IOS OR ANDROID) )
       include/citygml/appearancemanager.h
       include/citygml/polygonmanager.h
       include/citygml/geometrymanager.h
+      include/citygml/groupmanager.h
 
       include/parser/nodetypes.h
       include/parser/attributes.h
@@ -287,6 +290,7 @@ else()
       include/citygml/appearancemanager.h
       include/citygml/polygonmanager.h
       include/citygml/geometrymanager.h
+      include/citygml/groupmanager.h
     )
 endif()
 

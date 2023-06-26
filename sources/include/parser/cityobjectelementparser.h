@@ -13,8 +13,8 @@ namespace citygml {
 
     class CityObjectElementParser : public GMLFeatureCollectionElementParser {
     public:
-        CityObjectElementParser(CityGMLDocumentParser& documentParser, CityGMLFactory& factory, std::shared_ptr<CityGMLLogger> logger,const ParserParams& parserParams, std::function<void(CityObject*)> callback);
-
+        CityObjectElementParser(CityGMLDocumentParser& documentParser, CityGMLFactory& factory, std::shared_ptr<CityGMLLogger> logger, const ParserParams& parserParams, std::function<void(std::shared_ptr<CityObject>)> callback);
+        
         // ElementParser interface
         virtual std::string elementParserName() const override;
         virtual bool handlesElement(const NodeType::XMLNode &node) const override;
@@ -35,8 +35,9 @@ namespace citygml {
         static void initializeAttributesSet();
         static AttributeType getAttributeType(const NodeType::XMLNode& node);
 
-        CityObject* m_model;
-        std::function<void(CityObject*)> m_callback;
+        std::shared_ptr<CityObject> m_model;
+        std::function<void(std::shared_ptr<CityObject>)> m_callback;
+
         std::string m_lastAttributeName;
         AttributeType m_lastAttributeType;
         AttributesMap* m_genericAttributeSet;
