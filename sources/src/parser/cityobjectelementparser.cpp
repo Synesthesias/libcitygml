@@ -297,13 +297,13 @@ namespace citygml {
                 m_model->setRectifiedGridCoverage(rectifiedGridCoverage);
             }));
 
-        } else if (node == NodeType::GRP_GroupMemberNode ) {           
+        } else if (node == NodeType::GRP_GroupMemberNode) {           
             if (attributes.hasXLinkAttribute()) {
                 m_factory.requestSharedGroupMember(m_model, attributes.getXLinkValue());
             }
         } else if (node == NodeType::GRP_ParentNode) {
             if (attributes.hasXLinkAttribute()) {
-                m_model->setAttribute( "parent" , attributes.getXLinkValue(), getAttributeType(node));
+                m_model->setAttribute("parent" , attributes.getXLinkValue(), getAttributeType(node));
             }
         } else if (node == NodeType::BLDG_BoundedByNode
                    || node == NodeType::BLDG_OuterBuildingInstallationNode
@@ -649,7 +649,6 @@ namespace citygml {
 
     FeatureObject* CityObjectElementParser::getFeatureObject()
     {
-        //return m_model;
         return m_model.get();
     }
 
