@@ -208,7 +208,7 @@ namespace citygml {
     {
         const auto codeSpacePath =
             std::filesystem::u8path(gmlPath)
-            .remove_filename().append(codeSpace).u8string();
+            .remove_filename().append(codeSpace).make_preferred().lexically_normal().u8string();
 
         if (m_codeLists->find(codeSpacePath) == m_codeLists->end()) {
             if (!std::filesystem::exists(std::filesystem::u8path(codeSpacePath))) {
