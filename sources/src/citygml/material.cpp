@@ -9,7 +9,7 @@ namespace citygml {
 
         m_diffuse = TVec3f(0.8f, 0.8f, 0.8f);
         m_emissive = TVec3f(0.f, 0.f, 0.f);
-        m_specular = TVec3f(1.f, 1.f, 1.f);
+        m_specular = TVec3f(0.f, 0.f, 0.f);
 
         m_shininess = 0.2f;
         m_transparency = 0.f;
