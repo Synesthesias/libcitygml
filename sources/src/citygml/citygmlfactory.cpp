@@ -213,7 +213,7 @@ namespace citygml {
         if (m_codeLists->find(codeSpacePath) == m_codeLists->end()) {
             if (!std::filesystem::exists(std::filesystem::u8path(codeSpacePath))) {
                 CITYGML_LOG_ERROR(m_logger, "Can not find codelist file " << codeSpacePath);
-                throw std::runtime_error("Can not find codelist file: " + codeSpacePath);
+                return "";
             }
             CITYGML_LOG_INFO(m_logger, "Parsing " << codeSpacePath);
 
