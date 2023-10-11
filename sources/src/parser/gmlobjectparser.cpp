@@ -33,7 +33,13 @@ namespace citygml {
         }
 
         if (node != NodeType::InvalidNode) return true;
-        
+
+        if (const auto codeSpace = attributes.getAttribute("codeSpace");
+            !codeSpace.empty()) {
+
+            m_lastCodeSpace = codeSpace;
+        }
+
         size_t pos = node.name().find_first_of(":");
         if (pos != std::string::npos) {
             if (isupper(node.name().substr(pos + 1).at(0))) {// Ignore Tag start with capital letter

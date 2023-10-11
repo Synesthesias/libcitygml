@@ -35,7 +35,7 @@ namespace citygml {
             int m_typeID;
         };
 
-        static const XMLNode& getXMLNodeFor(const std::string& name);
+        static XMLNode getXMLNodeFor(const std::string& name);
 
         static const XMLNode InvalidNode;
 

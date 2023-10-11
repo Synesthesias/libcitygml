@@ -449,7 +449,7 @@ namespace citygml {
         }
     }
 
-    const NodeType::XMLNode&NodeType::getXMLNodeFor(const std::string& name)
+    NodeType::XMLNode NodeType::getXMLNodeFor(const std::string& name)
     {
         initializeNodeTypes();
 
@@ -464,20 +464,24 @@ namespace citygml {
         std::string nodeName = lowerName;
 
         size_t pos = nodeName.find_first_of(":");
-        if (pos != std::string::npos) {
-            nodeName = nodeName.substr(pos + 1);
-        } else {
+        if (pos == std::string::npos) {
             // node has no prefix... try with core prefix
             return getXMLNodeFor("core:" + name);
         }
 
-        auto it = nodeNameTypeMap.find(nodeName);
+        const std::string prefix = nodeName.substr(0, pos);
+        nodeName = nodeName.substr(pos + 1);
+
+        const auto it = nodeNameTypeMap.find(nodeName);
 
         if (it == nodeNameTypeMap.end()) {
             return InvalidNode;
-        } else {
-            return *it->second;
         }
+
+        // Set node type with known node type without prefix.
+        auto nodeType = *it->second;
+        nodeType.setPrefix(prefix);
+        return nodeType;
     }
 
 #define DEFINE_NODE( prefix, elementname ) NodeType::XMLNode NodeType::prefix ## _ ## elementname ## Node;
