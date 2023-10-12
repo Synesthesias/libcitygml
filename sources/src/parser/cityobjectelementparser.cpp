@@ -456,7 +456,7 @@ namespace citygml {
                 m_model->setAddress(std::move(address));
             }));
             return true;
-        } else if (node == NodeType::URO_ExtendedAttributeNode || node == NodeType::URO_KeyValuePairNode) {
+        } else if (node == NodeType::URO_ExtendedAttributeNode || node == NodeType::URO_KeyValuePairNode || node == NodeType::URO_KeyValuePairAttributeNode) {
             return true;
         } else if (node == NodeType::URO_KeyNode) {
             m_lastCodeSpace = attributes.getAttribute("codeSpace");

@@ -399,6 +399,7 @@ namespace citygml {
         // URO
         NODETYPE( URO, ExtendedAttribute )
         NODETYPE( URO, KeyValuePair )
+        NODETYPE( URO, KeyValuePairAttribute )
         NODETYPE( URO, Key )
         NODETYPE( URO, CodeValue )
 
