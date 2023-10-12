@@ -29,11 +29,17 @@ namespace citygml {
             || node == NodeType::GML_DescriptionReferenceNode
             || node == NodeType::GML_MetaDataPropertyNode) {
 
+            if (const auto codeSpace = attributes.getAttribute("codeSpace");
+                !codeSpace.empty()) {
+
+                m_lastCodeSpace = codeSpace;
+            }
+
             return true;
         }
 
         if (node != NodeType::InvalidNode) return true;
-        
+
         size_t pos = node.name().find_first_of(":");
         if (pos != std::string::npos) {
             if (isupper(node.name().substr(pos + 1).at(0))) {// Ignore Tag start with capital letter
@@ -61,7 +67,13 @@ namespace citygml {
             || node == NodeType::GML_DescriptionReferenceNode
             || node == NodeType::GML_MetaDataPropertyNode) {
 
-            getObject()->setAttribute(node.name(), characters);
+            if (m_lastCodeSpace == "") {
+                getObject()->setAttribute(node.name(), characters);
+            } else {
+                const auto codeValue = m_factory.getCodeValue(m_lastCodeSpace, getDocumentLocation().getDocumentFilePath(), characters);
+                getObject()->setAttribute(node.name(), codeValue, detectAttributeType(codeValue));
+            }
+
             return true;
         }
 
@@ -92,6 +104,18 @@ namespace citygml {
                     getObject()->setAttribute(node.name(), codeValue, detectAttributeType(codeValue));
                 }
             } else { // have child tag
+                auto key = node.name();
+                auto& attributes = getObject()->getAttributes();
+                // If the attribute already has a key registered (there are multiple elements in XML with the same tag), rename the key.
+                if (!attributes[key].asAttributeSet().empty())
+                {
+                    int cnt = 2;
+                    while (!attributes[key + std::to_string(cnt)].asAttributeSet().empty())
+                    {
+                        cnt++;
+                    }
+                    key = key + std::to_string(cnt);
+                }
                 getObject()->getAttributes()[node.name()] = attributesMap;
             }
             m_attributeHierarchy->pop_back();

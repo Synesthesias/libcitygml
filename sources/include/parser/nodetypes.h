@@ -35,7 +35,7 @@ namespace citygml {
             int m_typeID;
         };
 
-        static const XMLNode& getXMLNodeFor(const std::string& name);
+        static XMLNode getXMLNodeFor(const std::string& name);
 
         static const XMLNode InvalidNode;
 
@@ -399,6 +399,7 @@ namespace citygml {
         // URO
         NODETYPE( URO, ExtendedAttribute )
         NODETYPE( URO, KeyValuePair )
+        NODETYPE( URO, KeyValuePairAttribute )
         NODETYPE( URO, Key )
         NODETYPE( URO, CodeValue )
 
