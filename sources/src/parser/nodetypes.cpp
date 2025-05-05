@@ -169,6 +169,7 @@ namespace citygml {
                 INITIALIZE_NODE( GML, UpperCorner )
                 INITIALIZE_NODE( GML, Solid )
                 INITIALIZE_NODE( GML, SurfaceMember )
+                INITIALIZE_NODE( GML, CurveMember)
                 INITIALIZE_NODE( GML, BaseSurface )
                 INITIALIZE_NODE( GML, Patches )
                 INITIALIZE_NODE( GML, TrianglePatches )
@@ -445,6 +446,9 @@ namespace citygml {
                 INITIALIZE_NODE( URO, Key )
                 INITIALIZE_NODE( URO, CodeValue )
 
+                INITIALIZE_NODE(URO, Lod2Network)
+                INITIALIZE_NODE(URO, Lod3Network)
+
                 nodesInitialized = true;
             }
         }
@@ -567,6 +571,7 @@ namespace citygml {
     DEFINE_NODE( GML, UpperCorner )
     DEFINE_NODE( GML, Solid )
     DEFINE_NODE( GML, SurfaceMember )
+    DEFINE_NODE( GML, CurveMember)
     DEFINE_NODE( GML, BaseSurface )
     DEFINE_NODE( GML, Patches )
     DEFINE_NODE( GML, TrianglePatches )
@@ -623,8 +628,8 @@ namespace citygml {
 
     DEFINE_NODE( GML, RectifiedGridCoverage )
 
-    DEFINE_NODE(GML, MultiGeometry)
-    DEFINE_NODE(GML, GeometryMember)
+    DEFINE_NODE( GML, MultiGeometry)
+    DEFINE_NODE( GML, GeometryMember)
 
     // BLDG
     DEFINE_NODE( BLDG, Building )
@@ -846,4 +851,7 @@ namespace citygml {
     DEFINE_NODE( URO, KeyValuePairAttribute )
     DEFINE_NODE( URO, Key )
     DEFINE_NODE( URO, CodeValue )
+
+    DEFINE_NODE(URO, Lod2Network)
+    DEFINE_NODE(URO, Lod3Network)
 }

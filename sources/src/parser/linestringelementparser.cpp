@@ -106,6 +106,7 @@ namespace citygml {
         std::string dim_str = attributes.getAttribute("srsDimension", "");
 
         if (dim_str.empty()) {
+            m_model->setDimensions(3);
             return;
         }
 

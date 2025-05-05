@@ -348,7 +348,8 @@ namespace citygml {
         } else if (node == NodeType::GEN_Lod0TerrainIntersectionNode
                    || node == NodeType::WTR_Lod0MultiCurveNode
                    || node == NodeType::WTR_Lod0MultiSurfaceNode 
-                   || node == NodeType::GEN_Lod0GeometryNode) {
+                   || node == NodeType::GEN_Lod0GeometryNode
+                   || node == NodeType::TRANS_Lod0NetworkNode) {
             
             parseGeometryPropertyElementForLODLevel(0, attributes.getCityGMLIDAttribute());
         } else if (node == NodeType::BLDG_Lod1MultiCurveNode
@@ -380,7 +381,8 @@ namespace citygml {
                    || node == NodeType::GEN_Lod2GeometryNode
                    || node == NodeType::FRN_Lod2GeometryNode
                    || node == NodeType::BLDG_Lod2GeometryNode
-                   || node == NodeType::VEG_Lod2GeometryNode) {
+                   || node == NodeType::VEG_Lod2GeometryNode 
+                   || node == NodeType::URO_Lod2NetworkNode) {
 
             parseGeometryPropertyElementForLODLevel(2, attributes.getCityGMLIDAttribute());
         } else if (node == NodeType::BLDG_Lod3MultiCurveNode
@@ -396,7 +398,8 @@ namespace citygml {
                    || node == NodeType::GEN_Lod3GeometryNode
                    || node == NodeType::FRN_Lod3GeometryNode
                    || node == NodeType::BLDG_Lod3GeometryNode
-                   || node == NodeType::VEG_Lod3GeometryNode) {
+                   || node == NodeType::VEG_Lod3GeometryNode 
+                   || node == NodeType::URO_Lod3NetworkNode) {
 
             parseGeometryPropertyElementForLODLevel(3, attributes.getCityGMLIDAttribute());
         } else if (node == NodeType::BLDG_Lod4MultiCurveNode
@@ -443,9 +446,9 @@ namespace citygml {
             setParserForNextElement(new ExternalReferenceParser(m_documentParser, m_factory, m_logger, [this](ExternalReference * externalReference){
                 m_model->setExternalReference(externalReference);
             }));
+
         } else if (node == NodeType::GML_MultiPointNode
-                   || node == NodeType::GRP_GeometryNode
-                   || node == NodeType::TRANS_Lod0NetworkNode) {
+                   || node == NodeType::GRP_GeometryNode ) {
             CITYGML_LOG_INFO(m_logger, "Skipping CityObject child element <" << node  << ">  at " << getDocumentLocation() << " (Currently not supported!)");
             setParserForNextElement(new SkipElementParser(m_documentParser, m_logger, node));
             return true;

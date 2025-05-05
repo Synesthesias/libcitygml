@@ -8,11 +8,13 @@
 #include "parser/polygonelementparser.h"
 #include "parser/delayedchoiceelementparser.h"
 #include "parser/sequenceparser.h"
+#include "parser/linestringelementparser.h"
 
 #include <citygml/geometry.h>
 #include <citygml/citygmlfactory.h>
 #include <citygml/citygmllogger.h>
 #include <citygml/polygon.h>
+#include <citygml/linestring.h>
 
 #include <mutex>
 
@@ -62,6 +64,7 @@ namespace citygml {
 				geometryTypeIDSet.insert(NodeType::GML_MultiCurveNode.typeID());
                 geometryTypeIDSet.insert(NodeType::GML_MultiPointNode.typeID());
                 geometryTypeIDSet.insert(NodeType::GML_MultiGeometryNode.typeID());
+                geometryTypeIDSet.insert(NodeType::GML_CompositeCurveNode.typeID());
 
                 geometryTypeIDSetInitialized = true;
 
@@ -141,6 +144,10 @@ namespace citygml {
             };
 
             setParserForNextElement(new SequenceParser(m_documentParser, m_logger, patchParserFactory, node));
+            return true;
+        }
+        else if (node == NodeType::GML_CurveMemberNode ) {
+            setParserForNextElement(new LineStringElementParser(m_documentParser, m_factory, m_logger, [this](std::shared_ptr<LineString> l) {m_model->addLineString(l);}));
             return true;
         }
 
