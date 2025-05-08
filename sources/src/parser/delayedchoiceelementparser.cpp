@@ -2,6 +2,7 @@
 
 #include "parser/documentlocation.h"
 #include "parser/citygmldocumentparser.h"
+#include "parser/skipelementparser.h"
 
 #include <citygml/citygmllogger.h>
 
@@ -34,14 +35,20 @@ namespace citygml {
             m_documentParser.setCurrentElementParser(choosenParser);
             return choosenParser->startElement(node, attributes);
         } else {
-            CITYGML_LOG_ERROR(m_logger, "DelayedChoiceElementParser could not find a parser to handle <" << node << "> at " << getDocumentLocation());
-            throw std::runtime_error("No parser for XML element found.");
+            CITYGML_LOG_WARN(m_logger, "DelayedChoiceElementParser could not find a parser to handle <" << node << "> at " << getDocumentLocation());
+            m_documentParser.removeCurrentElementParser(this);
+            m_documentParser.setCurrentElementParser(new SkipElementParser(m_documentParser, m_logger));
+            return false;
         }
     }
 
     bool DelayedChoiceElementParser::endElement(const NodeType::XMLNode&, const std::string&)
     {
-        throw std::runtime_error("DelayedChoiceElementParser::endElement must never be called.");
+        CITYGML_LOG_ERROR(m_logger, "DelayedChoiceElementParser::endElement must never be called. at " << getDocumentLocation());
+        // endElement must never be called, but this could happen if its content is empty.
+        // So we skip the element with error message.
+        m_documentParser.removeCurrentElementParser(this);
+        return true;
     }
 
     bool DelayedChoiceElementParser::handlesElement(const NodeType::XMLNode& node) const
